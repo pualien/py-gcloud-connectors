@@ -3,7 +3,7 @@ from googleapiclient.discovery import build
 from oauth2client.service_account import ServiceAccountCredentials
 from retry import retry
 
-from gcloud_connector.logger import EmptyLogger
+from gcloud_connectors.logger import EmptyLogger
 
 SCOPES = ['https://www.googleapis.com/auth/webmasters.readonly']
 
