@@ -5,7 +5,7 @@ class Logger:
     def __init__(self, logger_name):
         logger = logging.getLogger(logger_name)
 
-        logger.setLevel(logging.DEBUG)
+        logger.setLevel(logging.INFO)
         # create console handler with a higher log level
         ch = logging.StreamHandler()
         ch.setLevel(logging.INFO)
