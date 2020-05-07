@@ -21,7 +21,7 @@ class GSCConnector():
             self.creds = ServiceAccountCredentials.from_json_keyfile_dict(
                 self.json_keyfile_dict, scopes=SCOPES)
 
-        self.service = build('webmasters', 'v3', credentials=self.creds)
+        self.service = build('webmasters', 'v3', credentials=self.creds, cache_discovery=False)
         self.logger = logger if logger is not None else EmptyLogger()
 
     @retry(exceptions=Exception, tries=5)

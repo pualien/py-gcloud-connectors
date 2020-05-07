@@ -38,8 +38,8 @@ class GAnalyticsConnector:
         self.http = self.creds.authorize(httplib2.Http())
 
         self.service = build('analytics', 'v4', http=self.http,
-                             discoveryServiceUrl='https://analyticsreporting.googleapis.com/$discovery/rest'
-                             )
+                             discoveryServiceUrl='https://analyticsreporting.googleapis.com/$discovery/rest',
+                             cache_discovery=False)
         self.logger = logger if logger is not None else EmptyLogger()
         self.management_service = None
 

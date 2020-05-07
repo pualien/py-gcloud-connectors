@@ -23,7 +23,7 @@ class GSheetsConnector:
             self.creds = ServiceAccountCredentials.from_json_keyfile_dict(
                 self.json_keyfile_dict, scopes=SCOPES)
 
-        self.service = build('sheets', 'v4', credentials=self.creds)
+        self.service = build('sheets', 'v4', credentials=self.creds, cache_discovery=False)
 
     @retry((requests.exceptions.ReadTimeout, gspread.exceptions.APIError), tries=3, delay=2)
     def pd_to_gsheet(self, df, spreadsheet_key, worksheet_name, value_input_option='USER_ENTERED', clean=True):
