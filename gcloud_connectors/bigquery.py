@@ -7,20 +7,26 @@ from google.cloud import bigquery
 
 
 class BigQueryConnector:
-    def __init__(self, confs_path, project_id, auth_type='service_account'):
+    def __init__(self, project_id, confs_path=None, auth_type='service_account', json_keyfile_dict=None, logger=None):
         self.confs_path = confs_path
+        self.json_keyfile_dict = json_keyfile_dict
         self.auth_type = auth_type
 
         # authorization boilerplate code
 
-        os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r'{}/{}'.format(os.getcwd(), confs_path)
+        # os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r'{}/{}'.format(os.getcwd(), confs_path)
 
-        self.creds = service_account.Credentials.from_service_account_file(
-            confs_path,
-        )
+        if self.json_keyfile_dict is None:
+            self.creds = service_account.Credentials.from_service_account_file(
+                self.confs_path,
+            )
+        else:
+            self.creds = service_account.Credentials.from_service_account_info(
+                self.json_keyfile_dict
+            )
         self.project_id = project_id
 
-        self.service = bigquery.Client(project=self.project_id)
+        self.service = bigquery.Client(project=self.project_id, credentials=self.creds)
 
     def pd_execute(self, query):
         """

@@ -11,15 +11,19 @@ SCOPES = ['https://spreadsheets.google.com/feeds',
 
 
 class GSheetsConnector:
-    def __init__(self, confs_path, auth_type='service_account'):
+    def __init__(self, confs_path=None, auth_type='service_accounts', json_keyfile_dict=None, logger=None):
         self.confs_path = confs_path
+        self.json_keyfile_dict = json_keyfile_dict
         self.auth_type = auth_type
 
-        creds = ServiceAccountCredentials.from_json_keyfile_name(
-            self.confs_path, scopes=SCOPES)
+        if self.json_keyfile_dict is None:
+            self.creds = ServiceAccountCredentials.from_json_keyfile_name(
+                self.confs_path, scopes=SCOPES)
+        else:
+            self.creds = ServiceAccountCredentials.from_json_keyfile_dict(
+                self.json_keyfile_dict, scopes=SCOPES)
 
-        self.service = build('sheets', 'v4', credentials=creds)
-        self.creds = creds
+        self.service = build('sheets', 'v4', credentials=self.creds)
 
     @retry((requests.exceptions.ReadTimeout, gspread.exceptions.APIError), tries=3, delay=2)
     def pd_to_gsheet(self, df, spreadsheet_key, worksheet_name, value_input_option='USER_ENTERED', clean=True):

@@ -9,12 +9,17 @@ SCOPES = ['https://www.googleapis.com/auth/webmasters.readonly']
 
 
 class GSCConnector():
-    def __init__(self, confs_path, auth_type='service_accounts', logger=None):
+    def __init__(self, confs_path=None, auth_type='service_accounts', json_keyfile_dict=None, logger=None):
         self.confs_path = confs_path
+        self.json_keyfile_dict = json_keyfile_dict
         self.auth_type = auth_type
 
-        self.creds = ServiceAccountCredentials.from_json_keyfile_name(
-            self.confs_path, scopes=SCOPES)
+        if self.json_keyfile_dict is None:
+            self.creds = ServiceAccountCredentials.from_json_keyfile_name(
+                self.confs_path, scopes=SCOPES)
+        else:
+            self.creds = ServiceAccountCredentials.from_json_keyfile_dict(
+                self.json_keyfile_dict, scopes=SCOPES)
 
         self.service = build('webmasters', 'v3', credentials=self.creds)
         self.logger = logger if logger is not None else EmptyLogger()

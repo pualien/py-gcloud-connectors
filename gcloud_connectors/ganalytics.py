@@ -23,19 +23,23 @@ class GAPermissionError(GAError):
 
 
 class GAnalyticsConnector:
-    def __init__(self, confs_path, auth_type='service_account', logger=None):
+    def __init__(self, confs_path=None, auth_type='service_accounts', json_keyfile_dict=None, logger=None):
         self.confs_path = confs_path
+        self.json_keyfile_dict = json_keyfile_dict
         self.auth_type = auth_type
 
-        # authorization boilerplate code
-        creds = ServiceAccountCredentials.from_json_keyfile_name(
-            self.confs_path, scopes=SCOPES)
-        self.http = creds.authorize(httplib2.Http())
+        if self.json_keyfile_dict is None:
+            self.creds = ServiceAccountCredentials.from_json_keyfile_name(
+                self.confs_path, scopes=SCOPES)
+        else:
+            self.creds = ServiceAccountCredentials.from_json_keyfile_dict(
+                self.json_keyfile_dict, scopes=SCOPES)
+
+        self.http = self.creds.authorize(httplib2.Http())
 
         self.service = build('analytics', 'v4', http=self.http,
                              discoveryServiceUrl='https://analyticsreporting.googleapis.com/$discovery/rest'
                              )
-        self.creds = creds
         self.logger = logger if logger is not None else EmptyLogger()
         self.management_service = None
 
