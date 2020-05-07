@@ -18,12 +18,12 @@ class GStorageConnector:
 
         if self.confs_path is None:
 
-            self.confs_path = 'gstorage_creds.json'
-            with open(self.confs_path, 'a') as cred:
-                json.dump(json_keyfile_dict, cred)
+            from tempfile import NamedTemporaryFile
+            with NamedTemporaryFile('w') as jsonfile:
+                json.dump(json_keyfile_dict, jsonfile)
+                jsonfile.flush()
 
-            self.service = storage.Client.from_service_account_json(self.confs_path)
-            os.remove(self.confs_path)
+                self.service = storage.Client.from_service_account_json(jsonfile.name)
         else:
             self.service = storage.Client.from_service_account_json(self.confs_path)
 
