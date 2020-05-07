@@ -28,12 +28,13 @@ class BigQueryConnector:
 
         self.service = bigquery.Client(project=self.project_id, credentials=self.creds)
 
-    def pd_execute(self, query):
+    def pd_execute(self, query, progress_bar_type=None):
         """
 
         :param query:
+        :param progress_bar_type:
         :return:
         """
-        return pandas_gbq.read_gbq(query, project_id=self.project_id, credentials=self.creds)
+        return pandas_gbq.read_gbq(query, project_id=self.project_id, credentials=self.creds, progress_bar_type=progress_bar_type)
 
 
