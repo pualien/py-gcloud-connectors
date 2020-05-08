@@ -37,10 +37,10 @@ class GStorageConnector:
         :return:
         """
         bucket = self.service.get_bucket(bucket_name)
-        with tempfile.NamedTemporaryFile(delete=True) as temp:
+        with tempfile.NamedTemporaryFile('w') as temp:
             df.to_parquet(temp.name + '.parquet', index=False)
             bucket.blob(file_name_path).upload_from_filename(temp.name + '.parquet', content_type='application/octet-stream')
-            temp.close()
+            temp.flush()
             return True
         return False
 
