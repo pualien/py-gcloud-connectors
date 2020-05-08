@@ -29,7 +29,8 @@ class BigQueryConnector:
 
         self.service = bigquery.Client(project=self.project_id, credentials=self.creds)
 
-    def pd_execute(self, query, progress_bar_type=None, bqstorage_enabled=False):
+    def pd_execute(self, query, progress_bar_type=None, bqstorage_enabled=False, deduplicate_objects=True,
+                   strings_to_categorical=True):
         """
 
         :param query:
@@ -42,7 +43,10 @@ class BigQueryConnector:
             bqstorage_client = BigQueryStorageClient(
                 credentials=self.creds
             )
-            return self.service.query(query).to_arrow(bqstorage_client=bqstorage_client, progress_bar_type=progress_bar_type).to_pandas()
+            return self.service.query(query).to_arrow(bqstorage_client=bqstorage_client,
+                                                      progress_bar_type=progress_bar_type
+                                                      ).to_pandas(deduplicate_objects=deduplicate_objects,
+                                                                  strings_to_categorical=strings_to_categorical)
         else:
             return self.service.query(query).to_dataframe(progress_bar_type=progress_bar_type)
         # return pandas_gbq.read_gbq(query, project_id=self.project_id, credentials=self.creds, progress_bar_type=progress_bar_type, use_bqstorage_api=True)
