@@ -41,6 +41,7 @@ class GStorageConnector:
             df.to_parquet(temp.name + '.parquet', index=False)
             bucket.blob(file_name_path).upload_from_filename(temp.name + '.parquet', content_type='application/octet-stream')
             temp.flush()
+            os.remove(temp.name)
             return True
         return False
 
