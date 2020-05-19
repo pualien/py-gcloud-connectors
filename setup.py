@@ -26,8 +26,8 @@ def reqs(*f):
     return [req for subreq in _reqs(*f) for req in subreq]
 
 
-setup(name='gcloud-connector',
-      version='0.1.13',
+setup(name='gcloud-connectors',
+      version='0.1.14',
       url='https://github.com/pualien/py-gcloud-connector',
       license='MIT',
       author='Matteo Senardi',
