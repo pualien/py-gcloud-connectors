@@ -27,7 +27,7 @@ def reqs(*f):
 
 
 setup(name='gcloud-connectors',
-      version='0.1.15',
+      version='0.1.16',
       url='https://github.com/pualien/py-gcloud-connector',
       license='MIT',
       author='Matteo Senardi',

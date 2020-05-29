@@ -31,8 +31,8 @@ class BigQueryConnector:
         table = self.service.get_table(table_ref)
         schema_dtypes = {}
         for schema in table.schema:
-            if schema.field_type in ['STRING', 'DATE']:
-                type = 'category'
+            if schema.field_type in ['STRING', 'DATE', 'TIMESTAMP']:
+                type = 'string'
             elif schema.field_type in ['FLOAT', 'BOOLEAN', 'INTEGER']:
                 type = schema.field_type.lower()
             else:
