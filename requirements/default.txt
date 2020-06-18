@@ -1,6 +1,5 @@
 pandas>=0.25.3
 google-api-python-client==1.6.7
-gspread==3.2.0
 google-cloud-storage==1.26.0
 google-cloud-bigquery==1.24.0
 google-cloud-bigquery-storage==0.8.0
