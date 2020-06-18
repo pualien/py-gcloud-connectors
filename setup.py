@@ -26,9 +26,9 @@ def reqs(*f):
     return [req for subreq in _reqs(*f) for req in subreq]
 
 
-def get_requirements(requirements_file='requirements.txt'):
+def get_requirements(*requirements_file):
     """Get the contents of a file listing the requirements"""
-    lines = open(requirements_file).readlines()
+    lines = open(os.path.join(os.getcwd(), 'requirements', *requirements_file)).readlines()
     dependencies = []
     for line in lines:
         maybe_dep = line.strip()
