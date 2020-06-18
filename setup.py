@@ -26,6 +26,28 @@ def reqs(*f):
     return [req for subreq in _reqs(*f) for req in subreq]
 
 
+def get_requirements(requirements_file='requirements.txt'):
+    """Get the contents of a file listing the requirements"""
+    lines = open(requirements_file).readlines()
+    dependencies = []
+    for line in lines:
+        maybe_dep = line.strip()
+        if maybe_dep.startswith('#'):
+            # Skip pure comment lines
+            continue
+        if maybe_dep.startswith('git+'):
+            # VCS reference for dev purposes, expect a trailing comment
+            # with the normal requirement
+            __, __, maybe_dep = maybe_dep.rpartition('#')
+        else:
+            # Ignore any trailing comment
+            maybe_dep, __, __ = maybe_dep.partition('#')
+        # Remove any whitespace and assume non-empty results are dependencies
+        maybe_dep = maybe_dep.strip()
+        if maybe_dep:
+            dependencies.append(maybe_dep)
+    return dependencies
+
 setup(name='gcloud-connectors',
       version='0.1.19',
       url='https://github.com/pualien/py-gcloud-connector',
@@ -34,6 +56,6 @@ setup(name='gcloud-connectors',
       author_email='pualien@gmail.com',
       description='Python utilities to simplify connection with Google APIs',
       packages=find_packages(exclude=['tests']),
-      install_requires=reqs('default.txt'),
+      install_requires=get_requirements('default.txt'),
       long_description=open('README.md').read(),
       zip_safe=False)
