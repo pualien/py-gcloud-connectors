@@ -35,8 +35,10 @@ class BigQueryConnector:
                 type = 'string'
             elif schema.field_type in ['DATE', 'TIMESTAMP']:
                 type = 'datetime64[ns]'
-            elif schema.field_type in ['FLOAT', 'INTEGER']:
+            elif schema.field_type in ['FLOAT']:
                 type = schema.field_type.lower()
+            elif schema.field_type in ['INTEGER']:
+                type = 'int'
             elif schema.field_type in ['BOOLEAN']:
                 type = 'bool'
             else:
