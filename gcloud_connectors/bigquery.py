@@ -31,10 +31,14 @@ class BigQueryConnector:
         table = self.service.get_table(table_ref)
         schema_dtypes = {}
         for schema in table.schema:
-            if schema.field_type in ['STRING', 'DATE', 'TIMESTAMP']:
+            if schema.field_type in ['STRING']:
                 type = 'string'
-            elif schema.field_type in ['FLOAT', 'BOOLEAN', 'INTEGER']:
+            elif schema.field_type in ['DATE', 'TIMESTAMP']:
+                type = 'datetime64[ns]'
+            elif schema.field_type in ['FLOAT', 'INTEGER']:
                 type = schema.field_type.lower()
+            elif schema.field_type in ['BOOLEAN']:
+                type = 'bool'
             else:
                 raise AttributeError('Unknown type {} for {}'.format(schema.field_type, schema.name))
             schema_dtypes[schema.name] = type

@@ -1,6 +1,6 @@
 import tempfile
 
-from google.oauth2 import service_account
+from gcloud_connectors.logger import EmptyLogger
 from google.cloud import storage
 import os
 import json
@@ -26,6 +26,8 @@ class GStorageConnector:
                 self.service = storage.Client.from_service_account_json(jsonfile.name)
         else:
             self.service = storage.Client.from_service_account_json(self.confs_path)
+        self.logger = logger if logger is not None else EmptyLogger()
+
 
 
     def pd_to_gstorage(self, df, bucket_name='docsity-da-test-gsc-store-bucket', file_name_path='da_gsc_macro/lang=it/country=Italy/y=2019/data.parquet'):
@@ -44,4 +46,11 @@ class GStorageConnector:
             os.remove(temp.name + '.parquet')
             return True
         return False
+
+    def recursive_delete(self,bucket_name, directory_path_to_delete):
+        bucket = self.service.get_bucket(bucket_name)
+        blobs = bucket.list_blobs(prefix=directory_path_to_delete)
+        for blob in blobs:
+            blob.delete()
+            self.logger.info('deleted {}'.format(blob.name))
 
