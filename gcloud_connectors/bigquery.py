@@ -32,7 +32,7 @@ class BigQueryConnector:
         schema_dtypes = {}
         for schema in table.schema:
             if schema.field_type in ['STRING']:
-                type = 'string'
+                type = str
             elif schema.field_type in ['DATE', 'TIMESTAMP']:
                 type = 'datetime64[ns]'
             elif schema.field_type in ['FLOAT']:
