@@ -1,6 +1,18 @@
 # PY GCLOUD CONNECTORS
 Python utilities to simplify connection with Google APIs
 
+## Where to get it
+The source code is currently hosted on GitHub at:
+https://github.com/pualien/py-gcloud-connectors
+
+Binary installers for the latest released version are available at the [Python
+package index](https://pypi.org/project/gcloud-connectors/).
+
+```sh
+# or PyPI
+pip install pandas
+```
+
 ## Google Wrappers
 - `BigQueryConnector` to read and cast pandas DataFrame from BigQuery
 

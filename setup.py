@@ -49,8 +49,9 @@ def get_requirements(*requirements_file):
     return dependencies
 
 setup(name='gcloud-connectors',
-      version='0.1.23',
+      version='0.1.24',
       url='https://github.com/pualien/py-gcloud-connector',
+      # download_url='https://github.com/pualien/py-gcloud-connectors/archive/0.1.23.tar.gz',
       license='MIT',
       author='Matteo Senardi',
       author_email='pualien@gmail.com',
