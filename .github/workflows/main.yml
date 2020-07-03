@@ -19,7 +19,7 @@ jobs:
           pip install
           pep517
           --user
-      - name: Build a binary wheel and a source tarball
+      - name: Build a binary 👤 wheel and a source tarball
         run: >-
           python -m
           pep517.build
@@ -27,7 +27,7 @@ jobs:
           --binary
           --out-dir dist/
           .
-      - name: Publish package to PyPI only if version is tagged
+      - name: Publish package 📦 to PyPI
         uses: pypa/gh-action-pypi-publish@master
         with:
           verify_metadata: false
