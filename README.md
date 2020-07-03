@@ -9,8 +9,7 @@ Binary installers for the latest released version are available at the [Python
 package index](https://pypi.org/project/gcloud-connectors/).
 
 ```sh
-# or PyPI
-pip install pandas
+pip install gcloud-connectors
 ```
 
 ## Google Wrappers

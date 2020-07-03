@@ -1,5 +1,8 @@
 name: Publish Python 🐍 distributions 📦 to PyPI
-on: push
+on:
+  push:
+    branches:
+      - prod
 jobs:
   build-n-publish:
     name: Build and publish Python 🐍 distributions 📦 to PyPI
@@ -24,7 +27,7 @@ jobs:
           --binary
           --out-dir dist/
           .
-      - name: Publish package to PyPI
+      - name: Publish package to PyPI only if version is tagged
         uses: pypa/gh-action-pypi-publish@master
         with:
           verify_metadata: false
