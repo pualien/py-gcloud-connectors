@@ -44,9 +44,7 @@ class GAnalyticsConnector:
         self.management_service = None
 
     def get_segments_by_id(self, segment_id):
-        self.management_service = build('analytics', 'v3', http=self.http,
-                                        # discoveryServiceUrl=('https://analyticsreporting.googleapis.com/$discovery/rest')
-                                        )
+        self.management_service = build('analytics', 'v3', http=self.http)
         segments = self.management_service.management().segments().list().execute().get('items', [])
         for segment in reversed(segments):
             pass
@@ -54,6 +52,19 @@ class GAnalyticsConnector:
     @retry(googleapiclient.errors.HttpError, tries=3, delay=2)
     def pd_get_report(self, view_id, start_date, end_date, metrics, dimensions, filters=None, page_size=100000,
                       page_token=None, comes_from_sampling=False, segments=None):
+        """
+        :param view_id: Google Analytics view id
+        :param start_date: start_date to get data
+        :param end_date: end_data to get data
+        :param metrics: list of ga: metrics
+        :param dimensions: list of ga: dimensions
+        :param filters: filters in string type format. Ex. ga:deviceCategory==tablet
+        :param page_size: max size of results per page
+        :param page_token: token that identifies the page of results (depending on page_size)
+        :param comes_from_sampling: to better debug unsampling capabilities, only with active logger initiated with GAnalyticsConnector
+        :param segments: list of Google Analytics segments in format ['gaid::...', ...]
+        :return: pandas DataFrame unsampled results from Google Analytics
+        """
         self.logger.info('start view {view_id} from sampled data {comes_from_sampling} '
                          'from {start_date} to {end_date} '
                          'with metrics ({metrics}), dimensions ({dimensions}), filters ({filters}), page_token {page_token}'
@@ -82,25 +93,14 @@ class GAnalyticsConnector:
                 segments[0], dict) else segments
             body['reportRequests'][0]["dimensions"].append({"name": "ga:segment"})
 
-        # try:
-        #     response = self.service.reports().batchGet(body=body).execute()
-        # except googleapiclient.errors.HttpError as e:
-        #     json_error = json.loads(e.content)
-        #     if json_error.get('error',{}).get('code') != 403:
-        #         raise GAError(e)
-        #     elif json_error.get('error',{}).get('message', '').startswith('User does not have sufficient permissions'):
-        #           raise GAPermissionError(e)
-        #     else:
-        #         raise e
-
         response = self.service.reports().batchGet(body=body).execute()
 
         df = self.get_df_from_response(response, dimensions, metrics)
         if response['reports'][0]['data'].get('samplesReadCounts') is not None:
             self.logger.info('unsampling for {} {}'.format(start_date, end_date))
-            # differenza di start_date meno end_date in giorni poi dividere la prima chiamata in due:
-            # start_date fino alla metà della differenza in giorni
-            # metà della differenza in giorni + 1 fino a end_date
+            # difference of start_date minus end_date in days, then split api of api calls in two parts:
+            # start_date until half difference in days
+            # half difference in days plus one day until end_date
             start_date_dt = datetime.strptime(start_date, '%Y-%m-%d')
             end_date_dt = datetime.strptime(end_date, '%Y-%m-%d')
             middle_dt = start_date_dt + (end_date_dt - start_date_dt) / 2
@@ -134,13 +134,12 @@ class GAnalyticsConnector:
     def pd_get_raw_report(self, report_request, dimensions, metrics, page_size=10000, page_token=None,
                           comes_from_sampling=False):
         """
-
+        Useful if combined with Export Reporting API v4 taken from Da Vinci Tools Chrome Extension https://chrome.google.com/webstore/detail/da-vinci-tools/pekljbkpgnpphbkgjbfgiiclemodfpen
         :param report_request: accepts only one report request at time to unsample correctly
-        :param dimensions:
-        :param metrics:
-        :param page_size:
-        :param page_token:
-        :param comes_from_sampling:
+        :param page_size: max size of results per page
+        :param page_token: token that identifies the page of results (depending on page_size)
+        :param comes_from_sampling: to better debug unsampling capabilities, only with active logger initiated with GAnalyticsConnector
+        :return: pandas DataFrame unsampled results from Google Analytics
         :return:
         """
         start_date = report_request['reportRequests'][0]['dateRanges'][0]['startDate']
@@ -154,9 +153,9 @@ class GAnalyticsConnector:
 
         if response['reports'][0]['data'].get('samplesReadCounts') is not None:
             self.logger.info('unsampling for {} {}'.format(start_date, end_date))
-            # differenza di start_date meno end_date in giorni poi dividere la prima chiamata in due:
-            # start_date fino alla metà della differenza in giorni
-            # metà della differenza in giorni + 1 fino a end_date
+            # difference of start_date minus end_date in days, then split api of api calls in two parts:
+            # start_date until half difference in days
+            # half difference in days plus one day until end_date
             start_date_dt = datetime.strptime(start_date, '%Y-%m-%d')
             end_date_dt = datetime.strptime(end_date, '%Y-%m-%d')
             middle_dt = start_date_dt + (end_date_dt - start_date_dt) / 2
@@ -190,6 +189,12 @@ class GAnalyticsConnector:
 
     @staticmethod
     def get_df_from_response(response, dimensions, metrics):
+        """
+        :param response: raw response from Google Analytics API
+        :param dimensions: list of Google Analytics dimensions
+        :param metrics: list of Google Analytics metrics
+        :return: pandas DataFrame of results from response
+        """
         data_dic = {f"{i}": [] for i in dimensions + metrics}
         for report in response.get('reports', []):
             rows = report.get('data', {}).get('rows', [])

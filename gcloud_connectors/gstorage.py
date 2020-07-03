@@ -28,15 +28,12 @@ class GStorageConnector:
             self.service = storage.Client.from_service_account_json(self.confs_path)
         self.logger = logger if logger is not None else EmptyLogger()
 
-
-
-    def pd_to_gstorage(self, df, bucket_name='docsity-da-test-gsc-store-bucket', file_name_path='da_gsc_macro/lang=it/country=Italy/y=2019/data.parquet'):
+    def pd_to_gstorage(self, df, bucket_name, file_name_path):
         """
-
-        :param df:
-        :param bucket_name:
-        :param file_name_path:
-        :return:
+        :param df: pandas DataFrame to be saved on GCS
+        :param bucket_name: GCS bucket name
+        :param file_name_path: path to save file on bucket
+        :return: True, False whether file is correctly saved or not
         """
         bucket = self.service.get_bucket(bucket_name)
         with tempfile.NamedTemporaryFile('w') as temp:
@@ -47,10 +44,18 @@ class GStorageConnector:
             return True
         return False
 
-    def recursive_delete(self,bucket_name, directory_path_to_delete):
+    def recursive_delete(self, bucket_name, directory_path_to_delete):
+        """
+        :param bucket_name: GCS bucket name
+        :param directory_path_to_delete: path to start recursive deletion
+        :return: list of deleted files from GSC
+        """
         bucket = self.service.get_bucket(bucket_name)
         blobs = bucket.list_blobs(prefix=directory_path_to_delete)
+        deleted_files = []
         for blob in blobs:
             blob.delete()
             self.logger.info('deleted {}'.format(blob.name))
+            deleted_files.append(blob.name)
+        return deleted_files
 

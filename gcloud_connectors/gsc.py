@@ -8,7 +8,7 @@ from gcloud_connectors.logger import EmptyLogger
 SCOPES = ['https://www.googleapis.com/auth/webmasters.readonly']
 
 
-class GSCConnector():
+class GSCConnector:
     def __init__(self, confs_path=None, auth_type='service_accounts', json_keyfile_dict=None, logger=None):
         self.confs_path = confs_path
         self.json_keyfile_dict = json_keyfile_dict
@@ -26,13 +26,22 @@ class GSCConnector():
 
     @retry(exceptions=Exception, tries=5)
     def execute_request(self, property_uri, request):
-        """Executes a searchAnalytics.query request.
-        Args:
-          service: The webmasters service to use when executing the query.
-          property_uri: The site or app URI to request data for.
-          request: The request to be executed.
-        Returns:
-          An array of response rows.
+        """
+        :param property_uri: Site or app URI to request data for.
+        :param request: GSC api request.
+        Ex.
+        'startDate': '2019-01-01',
+            'endDate': '2020-02-05',
+            'dimensions': ['date'],
+            'dimensionFilterGroups': [{
+                'filters': [{
+                    'dimension': 'page',
+                    'expression': '/us/',
+                    'operator': 'contains'
+                }]
+            }],
+            'rowLimit': 25000
+        :return: GSC response
         """
 
         return self.service.searchanalytics().query(

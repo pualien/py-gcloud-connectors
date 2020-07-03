@@ -34,6 +34,15 @@ class GSheetsConnector:
 
     def delete_cells(self, spreadsheet_key, worksheet_name, start_index=1, end_index=30, dimension='COLUMNS',
                      additional_base_sheet=False):
+        """
+        :param spreadsheet_key: id for Spreadsheet taken from URL
+        :param worksheet_name: name as visibile in worksheet
+        :param start_index:
+        :param end_index:
+        :param dimension:
+        :param additional_base_sheet: whethere to clean also base sheet
+        :return:
+        """
         spreadsheet = self.gspread.open_by_key(spreadsheet_key)
         worksheets_to_delete = [worksheet_name, 'Foglio1'] if additional_base_sheet is True else [worksheet_name]
         for wk_name in worksheets_to_delete:
@@ -63,9 +72,12 @@ class GSheetsConnector:
     @retry((requests.exceptions.ReadTimeout, gspread.exceptions.APIError), tries=3, delay=2)
     def pd_to_gsheet(self, df, spreadsheet_key, worksheet_name, value_input_option='USER_ENTERED', clean=True, use_df2gsprad=True):
         """
-        :param df:
-        :param spreadsheet_key:
-        :param worksheet_name:
+        :param df: pandas DataFrame
+        :param spreadsheet_key: id for Spreadsheet taken from URL
+        :param worksheet_name: name as visibile in worksheet
+        :param value_input_option: 'USER_ENTERED' if scope is to maintain column types from pandas DataFrame
+        :param clean: whether to clean or not
+        :param use_df2gsprad:
         :return:
         """
         if use_df2gsprad:
@@ -83,9 +95,9 @@ class GSheetsConnector:
 
     def pd_read_gsheet(self, spreadsheet_key, worksheet_name):
         """
-        :param spreadsheet_key:
-        :param worksheet_name:
-        :return:
+        :param spreadsheet_key: id for Spreadsheet taken from URL
+        :param worksheet_name: name as visibile in worksheet
+        :return: pandas DataFrame from worksheet
         """
 
         return g2d.download(gfile=spreadsheet_key, wks_name=worksheet_name, col_names=True, credentials=self.creds)
