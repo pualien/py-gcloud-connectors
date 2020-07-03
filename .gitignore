@@ -3,4 +3,5 @@
 tests
 **/.ipynb_checkpoints/*
 dist
-
+build
+py_gcloud_connectors.egg-info
