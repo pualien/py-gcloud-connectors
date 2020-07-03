@@ -1,4 +1,4 @@
-![](https://imgur.com/vCJ3s3E)
+![](https://i.imgur.com/vCJ3s3E.png)
 
 # PY GCLOUD CONNECTORS
 Python utilities to simplify connection with Google APIs
