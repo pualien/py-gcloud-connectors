@@ -1,5 +1,8 @@
 import tempfile
 
+import google
+from retry import retry
+
 from gcloud_connectors.logger import EmptyLogger
 from google.cloud import storage
 import os
@@ -58,4 +61,29 @@ class GStorageConnector:
             self.logger.info('deleted {}'.format(blob.name))
             deleted_files.append(blob.name)
         return deleted_files
+
+    @retry((google.api_core.exceptions.GatewayTimeout), tries=3, delay=2)
+    def copy_blob(self, source_bucket, dest_bucket, blob):
+        return source_bucket.copy_blob(blob, dest_bucket, new_name=blob.name)
+
+    def recursive_copy_between_buckets(self, source_bucket, dest_bucket, prefix, delimiter='/', to_delete=False):
+        """
+
+        :param source_bucket: source bucket where files are currently located
+        :param dest_bucket: destination bucket where to copy files
+        :param prefix: to filter based on path hierarchy
+        :param delimiter: wildcard to match files
+        :param to_delete: True if you want to delete blobs from source bucket, default is False
+        :return:
+        """
+        source_bucket = self.service.get_bucket(source_bucket)
+        dest_bucket = self.service.get_bucket(dest_bucket)
+
+        blobs = source_bucket.list_blobs(prefix=prefix, delimiter=delimiter)  # assuming this is tested
+
+        for blob in blobs:
+            self.copy_blob(source_bucket=source_bucket, dest_bucket=dest_bucket, blob=blob)
+            self.logger.info('copied {} from {} to {}'.format(blob.name, source_bucket.name, dest_bucket.name))
+            if to_delete is True:
+                source_bucket.delete_blob(blob.name)
 

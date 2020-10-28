@@ -25,7 +25,7 @@ pip install gcloud-connectors
 
 - `GSheetsConnector` to read and upload pandas DataFrame from / to Google Spreadsheet
 
-- `GStorageConnector` to write pandas DataFrame in parquet format to Google Cloud Storage
+- `GStorageConnector` to write pandas DataFrame in parquet format to Google Cloud Storage, recursive delete, copy files and folders between buckets
 
 
 ### Bonus
