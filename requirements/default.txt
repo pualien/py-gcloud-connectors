@@ -12,4 +12,4 @@ google-auth==1.23.0
 pandas-gbq==0.14.0
 pyarrow==0.16.0
 fastparquet==0.4.1
-google-api-python-client==1.12.5
+google-api-python-client==1.10.0
