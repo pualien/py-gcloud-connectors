@@ -4,7 +4,7 @@ google-cloud-bigquery-storage==0.8.0
 fastavro==0.23.3
 retry==0.9.2
 tqdm==4.51.0
-git+https://github.com/pualien/df2gspread.git#egg=df2gspread
+git+https://github.com/pualien/df2gspread.git#@v1.0.8egg=df2gspread
 gspread-pandas==2.2.3
 google-cloud-storage==1.32.0
 google-resumable-media==1.1.0
