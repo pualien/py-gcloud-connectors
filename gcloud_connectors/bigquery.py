@@ -1,5 +1,5 @@
 
-from google.cloud.bigquery_storage_v1beta2.gapic.big_query_read_client import BigQueryReadClient
+from google.cloud.bigquery_storage_v1beta1 import BigQueryStorageClient
 from google.oauth2 import service_account
 from google.cloud import bigquery
 
@@ -117,7 +117,7 @@ class BigQueryConnector:
         """
 
         if bqstorage_enabled is True:
-            bqstorage_client = BigQueryReadClient(credentials=self.creds)
+            bqstorage_client = BigQueryStorageClient(credentials=self.creds)
             return (
                 self.service.query(query)
                     .result()
