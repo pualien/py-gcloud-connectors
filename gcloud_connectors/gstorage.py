@@ -14,12 +14,10 @@ class GStorageConnector:
         self.confs_path = confs_path
         self.json_keyfile_dict = json_keyfile_dict
         self.auth_type = auth_type
-
         # authorization boilerplate code
-
         # os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r'{}/{}'.format(os.getcwd(), confs_path)
 
-        if self.confs_path is None:
+        if self.json_keyfile_dict is not None:
 
             from tempfile import NamedTemporaryFile
             with NamedTemporaryFile('w') as jsonfile:
@@ -27,8 +25,10 @@ class GStorageConnector:
                 jsonfile.flush()
 
                 self.service = storage.Client.from_service_account_json(jsonfile.name)
-        else:
+        elif confs_path is not None:
             self.service = storage.Client.from_service_account_json(self.confs_path)
+        else:
+            self.service = storage.Client()
         self.logger = logger if logger is not None else EmptyLogger()
 
     def pd_to_gstorage(self, df, bucket_name, file_name_path):
@@ -36,7 +36,7 @@ class GStorageConnector:
         :param df: pandas DataFrame to be saved on GCS
         :param bucket_name: GCS bucket name
         :param file_name_path: path to save file on bucket
-        :return: True, False whether file is correctly saved or not
+        :return: True or error whether file is correctly saved or not
         """
         bucket = self.service.get_bucket(bucket_name)
         with tempfile.NamedTemporaryFile('w') as temp:
@@ -45,7 +45,6 @@ class GStorageConnector:
             temp.flush()
             os.remove(temp.name + '.parquet')
             return True
-        return False
 
     def recursive_delete(self, bucket_name, directory_path_to_delete):
         """
