@@ -1,6 +1,11 @@
 ![](https://i.imgur.com/vCJ3s3E.png)
 
 # PY GCLOUD CONNECTORS
+[![PyPI Latest Release](https://img.shields.io/pypi/v/gcloud-connectors.svg)](https://pypi.org/project/gcloud-connectors/)
+[![PyPI Build](https://github.com/pualien/py-gcloud-connectors/workflows/PyPI%20Build/badge.svg)](https://github.com/pualien/py-gcloud-connectors/actions)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/gcloud-connectors)](https://pypi.org/project/gcloud-connectors/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/gcloud-connectors.svg)](https://pypi.org/project/gcloud-connectors/)
+
 Python utilities to simplify connection with Google APIs
 
 ## Where to get it
@@ -15,23 +20,23 @@ pip install gcloud-connectors
 ```
 
 ## Google Wrappers
-- `BigQueryConnector` to read and cast pandas DataFrame from BigQuery
+- `BigQueryConnector`: read and cast pandas DataFrame from BigQuery
 
-- `GAnalyticsConnector` to unsample data and return pandas DataFrame from Google Analytics
+- `GAnalyticsConnector`: unsample data and return pandas DataFrame from Google Analytics
 
-- `GDriveConnector` to download, upload, search and rename files from Google Drive
+- `GDriveConnector`: download, upload, search and rename files from Google Drive
 
-- `GSCConnector` to get data from Google Search Console
+- `GSCConnector`: get data from Google Search Console
 
-- `GSheetsConnector` to read and upload pandas DataFrame from / to Google Spreadsheet
+- `GSheetsConnector`: read and upload pandas DataFrame from / to Google Spreadsheet
 
-- `GStorageConnector` to write pandas DataFrame in parquet format to Google Cloud Storage, recursive delete, copy files and folders between buckets
+- `GStorageConnector`: write pandas DataFrame in parquet format to Google Cloud Storage, recursive delete, copy files and folders between buckets
 
 
 ### Bonus
 
-- `ForeignExchangeRatesConverter` to get currency conversion rates
+- `ForeignExchangeRatesConverter`: get currency conversion rates
 
-- `LTVCalculator` to compute Customer Lifetime Value
+- `LTVCalculator`: compute Customer Lifetime Value
 
-- `pd_utils` to derive month, quarter column from date in pandas DataFrame
+- `pd_utils`: derive quarter, month column from date in pandas DataFrame

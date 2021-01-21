@@ -9,21 +9,22 @@ class BigQueryConnector:
         self.confs_path = confs_path
         self.json_keyfile_dict = json_keyfile_dict
         self.auth_type = auth_type
-
+        self.project_id = project_id
         # authorization boilerplate code
-
         # os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r'{}/{}'.format(os.getcwd(), confs_path)
 
-        if self.json_keyfile_dict is None:
-            self.creds = service_account.Credentials.from_service_account_file(
-                self.confs_path,
-            )
-        else:
-            self.creds = service_account.Credentials.from_service_account_info(
-                self.json_keyfile_dict
-            )
-        self.project_id = project_id
+        if self.confs_path is not None or self.json_keyfile_dict is not None:
+            if self.confs_path is not None:
+                self.creds = service_account.Credentials.from_service_account_file(
+                    self.confs_path,
+                )
+            elif self.json_keyfile_dict is not None:
+                self.creds = service_account.Credentials.from_service_account_info(
+                    self.json_keyfile_dict
+                )
 
+        else:
+            self.creds = None
         self.service = bigquery.Client(project=self.project_id, credentials=self.creds)
 
     @staticmethod
