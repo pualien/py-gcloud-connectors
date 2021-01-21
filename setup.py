@@ -60,6 +60,7 @@ setup(name='gcloud-connectors',
       packages=find_packages(exclude=['tests']),
       install_requires=get_requirements('default.txt'),
       long_description=open('README.md').read(),
+      long_description_content_type='text/markdown',
       python_requires='~=3.6',
       classifiers=[
           "License :: OSI Approved :: MIT License",
