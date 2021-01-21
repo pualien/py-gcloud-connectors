@@ -50,7 +50,7 @@ def get_requirements(*requirements_file):
 
 
 setup(name='gcloud-connectors',
-      version='0.1.41',
+      version='0.1.42',
       url='https://github.com/pualien/py-gcloud-connector',
       # download_url='https://github.com/pualien/py-gcloud-connectors/archive/0.1.23.tar.gz',
       license='MIT',
@@ -61,4 +61,14 @@ setup(name='gcloud-connectors',
       install_requires=get_requirements('default.txt'),
       long_description=open('README.md').read(),
       python_requires='~=3.6',
+      classifiers=[
+          "License :: OSI Approved :: MIT License",
+          "Operating System :: OS Independent",
+          "Programming Language :: Python :: 3.6",
+          "Programming Language :: Python :: 3.7",
+          "Programming Language :: Python :: 3.8",
+          "Programming Language :: Python :: 3.9",
+          "Topic :: Software Development :: Libraries :: Application Frameworks",
+          "Topic :: Software Development :: Libraries :: Python Modules",
+      ],
       zip_safe=False)
