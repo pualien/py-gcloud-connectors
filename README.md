@@ -1,4 +1,4 @@
-![](https://i.imgur.com/vCJ3s3E.png)
+![gcloud-connectors](https://github.com/pualien/py-gcloud-connectors/blob/master/images/logo.png?raw=true)
 
 # PY GCLOUD CONNECTORS
 [![PyPI Latest Release](https://img.shields.io/pypi/v/gcloud-connectors.svg)](https://pypi.org/project/gcloud-connectors/)
