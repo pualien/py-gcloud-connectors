@@ -1,4 +1,5 @@
 import tempfile
+from operator import itemgetter
 
 import google
 from retry import retry
@@ -65,7 +66,7 @@ class GStorageConnector:
     def copy_blob(self, source_bucket, dest_bucket, blob):
         return source_bucket.copy_blob(blob, dest_bucket, new_name=blob.name)
 
-    def recursive_copy_between_buckets(self, source_bucket, dest_bucket, prefix, delimiter='/', to_delete=False):
+    def recursive_copy_between_buckets(self, source_bucket, dest_bucket, prefix, delimiter='/', to_delete=False, reverse_order=False):
         """
 
         :param source_bucket: source bucket where files are currently located
@@ -73,12 +74,21 @@ class GStorageConnector:
         :param prefix: to filter based on path hierarchy
         :param delimiter: wildcard to match files
         :param to_delete: True if you want to delete blobs from source bucket, default is False
+        :param revert_order: True if you want to revert order starting from last added objects
         :return:
         """
         source_bucket = self.service.get_bucket(source_bucket)
         dest_bucket = self.service.get_bucket(dest_bucket)
 
-        blobs = source_bucket.list_blobs(prefix=prefix, delimiter=delimiter)  # assuming this is tested
+        if reverse_order:
+            unordered_blobs = source_bucket.list_blobs(prefix=prefix, delimiter=delimiter)
+            blobs = []
+            for blob in unordered_blobs:
+                blobs.append((blob, blob.time_created))
+            blobs.sort(key=itemgetter(2), reverse=True)
+            blobs = [x[0] for x in blobs]
+        else:
+            blobs = source_bucket.list_blobs(prefix=prefix, delimiter=delimiter)
 
         for blob in blobs:
             self.copy_blob(source_bucket=source_bucket, dest_bucket=dest_bucket, blob=blob)
