@@ -32,20 +32,29 @@ class GStorageConnector:
             self.service = storage.Client()
         self.logger = logger if logger is not None else EmptyLogger()
 
-    def pd_to_gstorage(self, df, bucket_name, file_name_path):
+    def pd_to_gstorage(self, df, bucket_name, file_name_path, tempfile_mode=True):
         """
         :param df: pandas DataFrame to be saved on GCS
         :param bucket_name: GCS bucket name
         :param file_name_path: path to save file on bucket
+        :param tempfile_mode: if using a tempfile before pushing to GCS
         :return: True or error whether file is correctly saved or not
         """
-        bucket = self.service.get_bucket(bucket_name)
-        with tempfile.NamedTemporaryFile('w') as temp:
-            df.to_parquet(temp.name + '.parquet', index=False)
-            bucket.blob(file_name_path).upload_from_filename(temp.name + '.parquet', content_type='application/octet-stream')
-            temp.flush()
-            os.remove(temp.name + '.parquet')
-            return True
+        if tempfile_mode:
+            bucket = self.service.get_bucket(bucket_name)
+            with tempfile.NamedTemporaryFile('w') as temp:
+                df.to_parquet(temp.name + '.parquet', index=False)
+                bucket.blob(file_name_path).upload_from_filename(temp.name + '.parquet',
+                                                                 content_type='application/octet-stream')
+                temp.flush()
+                os.remove(temp.name + '.parquet')
+                return True
+        else:
+            # only works for the following order: gcloud CLI default, gcsfs cached token,
+            # google compute metadata service, anonymous
+            df.to_parquet(
+                'gs://{bucket_name}/{file_name_path}'.format(bucket_name=bucket_name, file_name_path=file_name_path),
+                index=False)
 
     def recursive_delete(self, bucket_name, directory_path_to_delete):
         """
@@ -66,7 +75,8 @@ class GStorageConnector:
     def copy_blob(self, source_bucket, dest_bucket, blob):
         return source_bucket.copy_blob(blob, dest_bucket, new_name=blob.name)
 
-    def recursive_copy_between_buckets(self, source_bucket, dest_bucket, prefix, delimiter='/', to_delete=False, reverse_order=False):
+    def recursive_copy_between_buckets(self, source_bucket, dest_bucket, prefix, delimiter='/', to_delete=False,
+                                       reverse_order=False):
         """
 
         :param source_bucket: source bucket where files are currently located
@@ -84,8 +94,8 @@ class GStorageConnector:
             unordered_blobs = source_bucket.list_blobs(prefix=prefix, delimiter=delimiter)
             blobs = []
             for blob in unordered_blobs:
-                blobs.append((blob, blob.time_created))
-            blobs.sort(key=itemgetter(2), reverse=True)
+                blobs.append((blob, blob.name))
+            blobs.sort(key=itemgetter(1), reverse=True)
             blobs = [x[0] for x in blobs]
         else:
             blobs = source_bucket.list_blobs(prefix=prefix, delimiter=delimiter)
@@ -95,4 +105,3 @@ class GStorageConnector:
             self.logger.info('copied {} from {} to {}'.format(blob.name, source_bucket.name, dest_bucket.name))
             if to_delete is True:
                 source_bucket.delete_blob(blob.name)
-

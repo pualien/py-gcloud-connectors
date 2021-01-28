@@ -18,3 +18,4 @@ pandas-gbq==0.14.1
 pyarrow==0.17.1
 fastparquet==0.4.1
 google-api-python-client==1.12.5
+gcsfs==0.7.1
