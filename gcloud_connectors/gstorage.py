@@ -53,7 +53,7 @@ class GStorageConnector:
             # only works for the following order: gcloud CLI default, gcsfs cached token,
             # google compute metadata service, anonymous
             df.to_parquet(
-                'gs://{bucket_name}/{file_name_path}'.format(bucket_name=bucket_name, file_name_path=file_name_path),
+                'gcs://{bucket_name}/{file_name_path}'.format(bucket_name=bucket_name, file_name_path=file_name_path),
                 index=False)
 
     def recursive_delete(self, bucket_name, directory_path_to_delete):
