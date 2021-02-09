@@ -4,7 +4,7 @@ future==0.18.2
 decorator==4.4.2
 google-auth-oauthlib==0.4.2
 google-auth==1.23.0
-google-cloud-bigquery==1.26.1
+google-cloud-bigquery==1.27.2
 google-cloud-bigquery-storage==1.0.0
 # google-cloud-bigquery[bqstorage,pandas]
 # google-cloud-bigquery-storage==2.1.0

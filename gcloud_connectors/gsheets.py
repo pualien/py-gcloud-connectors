@@ -92,7 +92,6 @@ class GSheetsConnector:
             x = Spread(spreadsheet_key, worksheet_name, creds=self.creds, create_sheet=True)
             return x.df_to_sheet(df, index=False, sheet=worksheet_name, replace=clean)
 
-
     def pd_read_gsheet(self, spreadsheet_key, worksheet_name):
         """
         :param spreadsheet_key: id for Spreadsheet taken from URL
