@@ -1,4 +1,6 @@
-setuptools==50.3.2
+fsspec==0.8.5
+cachetools==4.2.1
+google-api-core==1.26.0
 pandas==1.1.4
 future==0.18.2
 decorator==4.4.2
