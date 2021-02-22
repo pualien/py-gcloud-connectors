@@ -1,6 +1,5 @@
-import json
-
 import googleapiclient
+import google.auth
 from googleapiclient.discovery import build
 import httplib2
 import pandas as pd
@@ -28,23 +27,32 @@ class GAnalyticsConnector:
         self.json_keyfile_dict = json_keyfile_dict
         self.auth_type = auth_type
 
-        if self.json_keyfile_dict is None:
-            self.creds = ServiceAccountCredentials.from_json_keyfile_name(
-                self.confs_path, scopes=SCOPES)
+        if self.json_keyfile_dict is not None or self.confs_path is not None:
+            if self.json_keyfile_dict is None:
+                self.creds = ServiceAccountCredentials.from_json_keyfile_name(
+                    self.confs_path, scopes=SCOPES)
+            else:
+                self.creds = ServiceAccountCredentials.from_json_keyfile_dict(
+                    self.json_keyfile_dict, scopes=SCOPES)
+            self.http = self.creds.authorize(httplib2.Http())
+            self.service = build('analytics', 'v4', http=self.http,
+                                 discoveryServiceUrl='https://analyticsreporting.googleapis.com/$discovery/rest',
+                                 cache_discovery=False)
         else:
-            self.creds = ServiceAccountCredentials.from_json_keyfile_dict(
-                self.json_keyfile_dict, scopes=SCOPES)
+            self.creds, project = google.auth.default()
+            self.service = build('analytics', 'v4', credentials=self.creds,
+                                 discoveryServiceUrl='https://analyticsreporting.googleapis.com/$discovery/rest',
+                                 cache_discovery=False)
 
-        self.http = self.creds.authorize(httplib2.Http())
 
-        self.service = build('analytics', 'v4', http=self.http,
-                             discoveryServiceUrl='https://analyticsreporting.googleapis.com/$discovery/rest',
-                             cache_discovery=False)
         self.logger = logger if logger is not None else EmptyLogger()
         self.management_service = None
 
     def get_segments_by_id(self, segment_id):
-        self.management_service = build('analytics', 'v3', http=self.http)
+        if self.http:
+            self.management_service = build('analytics', 'v3', http=self.http)
+        else:
+            self.management_service = build('analytics', 'v3', credentials=self.creds)
         segments = self.management_service.management().segments().list().execute().get('items', [])
         for segment in reversed(segments):
             pass
