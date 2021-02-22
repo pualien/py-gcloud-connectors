@@ -51,7 +51,7 @@ class GAnalyticsConnector:
 
     @retry(googleapiclient.errors.HttpError, tries=3, delay=2)
     def pd_get_report(self, view_id, start_date, end_date, metrics, dimensions, filters=None, page_size=100000,
-                      page_token=None, comes_from_sampling=False, segments=None):
+                      page_token=None, comes_from_sampling=False, segments=None, *args, **kwargs):
         """
         :param view_id: Google Analytics view id
         :param start_date: start_date to get data
