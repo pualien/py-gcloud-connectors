@@ -24,7 +24,7 @@ class GSCConnector:
         self.service = build('searchconsole', 'v1', credentials=self.creds, cache_discovery=False)
         self.logger = logger if logger is not None else EmptyLogger()
 
-    @retry(exceptions=Exception, tries=5)
+    @retry(exceptions=Exception, tries=8)
     def execute_request(self, property_uri, request):
         """
         :param property_uri: Site or app URI to request data for.
