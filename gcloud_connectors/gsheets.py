@@ -1,4 +1,5 @@
 import gspread
+import google.auth
 import requests
 from googleapiclient.discovery import build
 from df2gspread import df2gspread as d2g
@@ -17,12 +18,15 @@ class GSheetsConnector:
         self.json_keyfile_dict = json_keyfile_dict
         self.auth_type = auth_type
 
-        if self.json_keyfile_dict is None:
-            self.creds = ServiceAccountCredentials.from_json_keyfile_name(
-                self.confs_path, scopes=SCOPES)
+        if self.json_keyfile_dict is not None or self.confs_path is not None:
+            if self.json_keyfile_dict is None:
+                self.creds = ServiceAccountCredentials.from_json_keyfile_name(
+                    self.confs_path, scopes=SCOPES)
+            else:
+                self.creds = ServiceAccountCredentials.from_json_keyfile_dict(
+                    self.json_keyfile_dict, scopes=SCOPES)
         else:
-            self.creds = ServiceAccountCredentials.from_json_keyfile_dict(
-                self.json_keyfile_dict, scopes=SCOPES)
+            self.creds, project = google.auth.default()
 
         self.service = build('sheets', 'v4', credentials=self.creds, cache_discovery=False)
         self.gspread = gspread.authorize(self.creds)
@@ -92,6 +96,7 @@ class GSheetsConnector:
             x = Spread(spreadsheet_key, worksheet_name, creds=self.creds, create_sheet=True)
             return x.df_to_sheet(df, index=False, sheet=worksheet_name, replace=clean)
 
+    @retry((requests.exceptions.ReadTimeout, gspread.exceptions.APIError), tries=3, delay=2)
     def pd_read_gsheet(self, spreadsheet_key, worksheet_name):
         """
         :param spreadsheet_key: id for Spreadsheet taken from URL
