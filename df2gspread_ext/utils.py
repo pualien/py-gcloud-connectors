@@ -1,18 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @Author: Eduard Trott
-# @Date:   2015-09-11 10:57:06
-# @Email:  etrott@redhat.com
-# @Last modified by:   etrott
-# @Last Modified time: 2016-01-19 14:27:12
+# @Author: Matteo Senardi
+# @Date:   2021-04-04 10:57:06
+# @Email:  pualien@gmail.com
+# @Last modified by:   pualien
+# @Last Modified time: 2021-04-04 10:57:06
 
 
 import logging
 import os
-import subprocess
-import sys
 import json
 
+from google.oauth2 import service_account
 from oauth2client import file, client, tools
 
 # Load logging before anything else
@@ -91,7 +90,7 @@ def get_credentials(credentials=None, client_secret_file=CLIENT_SECRET_FILE, ref
 
 
 def _is_valid_credentials(credentials):
-    return isinstance(credentials, client.OAuth2Credentials)
+    return isinstance(credentials, client.OAuth2Credentials) or isinstance(credentials, service_account.Credentials)
 
 
 def create_service_credentials(private_key_file=None, client_email=None,

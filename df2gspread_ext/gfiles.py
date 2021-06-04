@@ -1,17 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @Author: Eduard Trott
-# @Date:   2018-05-02 13:53:10
-# @Email:  etrott@redhat.com
-# @Last Modified by:   maybelinot
-# @Last Modified time: 2018-05-02 13:53:10
+# @Author: Matteo Senardi
+# @Date:   2021-04-04 10:57:06
+# @Email:  pualien@gmail.com
+# @Last modified by:   pualien
+# @Last Modified time: 2021-04-04 10:57:06
 
 
-import re
 from httplib2 import Http
 
 from apiclient import discovery, errors
-import gspread
 
 from .utils import logr
 
@@ -32,8 +30,8 @@ def get_file_id(credentials, gfile, write_access=False):
 
         :Example:
 
-            >>> from df2gspread.gfiles import get_file_id
-            >>> from df2gspread.utils import get_credentials
+            >>> from df2gspread_ext.gfiles import get_file_id
+            >>> from df2gspread_ext.utils import get_credentials
             >>> gfile = '/some/folder/with/file'
             >>> credentials = get_credentials()
             >>> get_file_id(credentials=credentials, gfile=gfile, write_access=True)

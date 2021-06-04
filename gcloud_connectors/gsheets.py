@@ -2,8 +2,8 @@ import gspread
 import google.auth
 import requests
 from googleapiclient.discovery import build
-from df2gspread import df2gspread as d2g
-from df2gspread import gspread2df as g2d
+from df2gspread_ext import df2gspread as d2g
+from df2gspread_ext import gspread2df as g2d
 from gspread_pandas import Spread
 from oauth2client.service_account import ServiceAccountCredentials
 from retry import retry

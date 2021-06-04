@@ -1,16 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @Author: Eduard Trott
-# @Date:   2015-09-16 11:45:16
-# @Email:  etrott@redhat.com
-# @Last modified by:   etrott
-# @Last Modified time: 2016-01-19 13:30:40
-
-
-import os
-import sys
-import re
-from string import ascii_uppercase
+# @Author: Matteo Senardi
+# @Date:   2021-04-04 10:57:06
+# @Email:  pualien@gmail.com
+# @Last modified by:   pualien
+# @Last Modified time: 2021-04-04 10:57:06
 
 import gspread
 import pandas as pd
@@ -48,7 +42,7 @@ def download(gfile, wks_name=None, col_names=False, row_names=False,
 
         :Example:
 
-            >>> from df2gspread import gspread2df as g2d
+            >>> from df2gspread_ext import gspread2df as g2d
             >>> df = g2d.download(gfile="1U-kSDyeD-...", col_names=True, row_names=True)
             >>> df
                    col1 col2

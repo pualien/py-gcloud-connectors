@@ -50,7 +50,7 @@ def get_requirements(*requirements_file):
 
 
 setup(name='gcloud-connectors',
-      version='0.1.54',
+      version='0.1.54b',
       url='https://github.com/pualien/py-gcloud-connector',
       # download_url='https://github.com/pualien/py-gcloud-connectors/archive/0.1.23.tar.gz',
       license='MIT',

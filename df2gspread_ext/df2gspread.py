@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @Author: Eduard Trott
-# @Date:   2015-09-16 11:28:21
-# @Email:  etrott@redhat.com
-# @Last modified by:   etrott
-# @Last Modified time: 2016-03-08 12:35:42
+# @Author: Matteo Senardi
+# @Date:   2021-04-04 10:57:06
+# @Email:  pualien@gmail.com
+# @Last modified by:   pualien
+# @Last Modified time: 2021-04-04 10:57:06
 
 
 import pandas as pd
-import numpy as np
 import gspread
 import re
 
@@ -61,7 +60,7 @@ def upload(df, gfile="/New Spreadsheet", wks_name=None,
 
         :Example:
 
-            >>> from df2gspread import df2gspread as d2g
+            >>> from df2gspread_ext import df2gspread as d2g
             >>> import pandas as pd
             >>> df = pd.DataFrame([1 2 3])
             >>> wks = d2g.upload(df, wks_name='Example worksheet')
