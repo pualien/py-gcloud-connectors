@@ -26,7 +26,7 @@ class GSheetsConnector:
                 self.creds = ServiceAccountCredentials.from_json_keyfile_dict(
                     self.json_keyfile_dict, scopes=SCOPES)
         else:
-            self.creds, project = google.auth.default()
+            self.creds, project = google.auth.default(scopes=SCOPES)
 
         self.service = build('sheets', 'v4', credentials=self.creds, cache_discovery=False)
         self.gspread = gspread.authorize(self.creds)
