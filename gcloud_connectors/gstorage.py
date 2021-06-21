@@ -63,7 +63,7 @@ class GStorageConnector:
         :return: list of deleted files from GSC
         """
         bucket = self.service.get_bucket(bucket_name)
-        blobs = bucket.list_blobs(prefix=directory_path_to_delete)
+        blobs = self.service.list_blobs(bucket.name, prefix=directory_path_to_delete)
         deleted_files = []
         for blob in blobs:
             blob.delete()
@@ -91,14 +91,14 @@ class GStorageConnector:
         dest_bucket = self.service.get_bucket(dest_bucket)
 
         if reverse_order:
-            unordered_blobs = source_bucket.list_blobs(prefix=prefix, delimiter=delimiter)
+            unordered_blobs = self.service.list_blobs(source_bucket.name, prefix=prefix, delimiter=delimiter)
             blobs = []
             for blob in unordered_blobs:
                 blobs.append((blob, blob.name))
             blobs.sort(key=itemgetter(1), reverse=True)
             blobs = [x[0] for x in blobs]
         else:
-            blobs = source_bucket.list_blobs(prefix=prefix, delimiter=delimiter)
+            blobs = self.service.list_blobs(source_bucket.name, prefix=prefix, delimiter=delimiter)
 
         for blob in blobs:
             self.copy_blob(source_bucket=source_bucket, dest_bucket=dest_bucket, blob=blob)
