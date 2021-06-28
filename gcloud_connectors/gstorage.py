@@ -75,10 +75,22 @@ class GStorageConnector:
     def copy_blob(self, source_bucket, dest_bucket, blob):
         return source_bucket.copy_blob(blob, dest_bucket, new_name=blob.name)
 
+    def rename_blob(self, bucket_name, blob_name, new_name):
+        """
+        :param bucket_name: bucket
+        :param blob_name: current blob name
+        :param new_name: new blob name
+        :return: new blob object
+        """
+
+        bucket = self.service.bucket(bucket_name)
+        blob = bucket.blob(blob_name)
+        new_blob = bucket.rename_blob(blob, new_name)
+        return new_blob
+
     def recursive_copy_between_buckets(self, source_bucket, dest_bucket, prefix, delimiter='/', to_delete=False,
                                        reverse_order=False):
         """
-
         :param source_bucket: source bucket where files are currently located
         :param dest_bucket: destination bucket where to copy files
         :param prefix: to filter based on path hierarchy
