@@ -1,4 +1,3 @@
-
 from google.cloud.bigquery_storage_v1beta1 import BigQueryStorageClient
 from google.oauth2 import service_account
 from google.cloud import bigquery
@@ -70,43 +69,31 @@ class BigQueryConnector:
         :param table: BigQuery table name
         :return: dict of {col1: dtype1, col2: dtype1, col3: dtype3....}
         """
-        table_ref = '{}.{}'.format(dataset, table)
-        table = self.service.get_table(table_ref)
-        schema_dtypes = {}
-        for schema in table.schema:
-            if schema.field_type in ['STRING']:
-                type = str
-            elif schema.field_type in ['DATE', 'TIMESTAMP']:
-                type = 'datetime64[ns]'
-            elif schema.field_type in ['FLOAT']:
-                type = schema.field_type.lower()
-            elif schema.field_type in ['INTEGER']:
-                type = 'int'
-            elif schema.field_type in ['BOOLEAN']:
-                type = 'bool'
-            else:
-                raise AttributeError('Unknown type {} for {}'.format(schema.field_type, schema.name))
-            schema_dtypes[schema.name] = type
-        return schema_dtypes
+        return self.get_pandas_dtypes(dataset, table)
 
     def get_pandas_dtypes(self, dataset, table):
+        """
+        :param dataset: BigQuery dataset name like bigquery-public-data.bitcoin_blockchain
+        :param table: BigQuery table name like blocks
+        :return: dict of column types as {col1: dtype1, col2: dtype1, col3: dtype3....}
+        """
         table_ref = '{}.{}'.format(dataset, table)
         table = self.service.get_table(table_ref)
         schema_dtypes = {}
         for schema in table.schema:
             if schema.field_type in ['STRING']:
-                type = str
+                type_x = str
             elif schema.field_type in ['DATE', 'TIMESTAMP']:
-                type = 'datetime64[ns]'
+                type_x = 'datetime64[ns]'
             elif schema.field_type in ['FLOAT']:
-                type = schema.field_type.lower()
+                type_x = schema.field_type.lower()
             elif schema.field_type in ['INTEGER']:
-                type = 'int'
+                type_x = 'int'
             elif schema.field_type in ['BOOLEAN']:
-                type = 'bool'
+                type_x = 'bool'
             else:
                 raise AttributeError('Unknown type {} for {}'.format(schema.field_type, schema.name))
-            schema_dtypes[schema.name] = type
+            schema_dtypes[schema.name] = type_x
         return schema_dtypes
 
     def pd_execute(self, query, progress_bar_type=None, bqstorage_enabled=False):
@@ -116,7 +103,7 @@ class BigQueryConnector:
         :param bqstorage_enabled: whether to user or not bqstorage to download results more quickly
         :return: pandas DataFrame from BigQuery sql execution
         """
-
+        del progress_bar_type
         if bqstorage_enabled is True:
             bqstorage_client = BigQueryStorageClient(credentials=self.creds)
             return (
@@ -130,5 +117,3 @@ class BigQueryConnector:
                     .result()
                     .to_dataframe()
             )
-
-

@@ -96,7 +96,7 @@ class GStorageConnector:
         :param prefix: to filter based on path hierarchy
         :param delimiter: wildcard to match files
         :param to_delete: True if you want to delete blobs from source bucket, default is False
-        :param revert_order: True if you want to revert order starting from last added objects
+        :param reverse_order: True if you want to revert order starting from last added objects
         :return:
         """
         source_bucket = self.service.get_bucket(source_bucket)
