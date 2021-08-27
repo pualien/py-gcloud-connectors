@@ -26,3 +26,4 @@ gstorage_service.pd_to_gstorage(
     event_date=day.strftime('%Y-%m-%d'),
     string_col=string_col))
 
+
