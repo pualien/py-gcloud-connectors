@@ -1,5 +1,6 @@
 import google
 import math
+import time
 from retry import retry
 from google.cloud import bigquery
 from google.cloud.bigquery_storage_v1beta1 import BigQueryStorageClient
@@ -147,7 +148,11 @@ class BigQueryConnector:
         if first_run:
             query_job = self.service.query(query)
             destination = query_job.destination
-            destination = self.service.get_table(destination)
+            try:
+                destination = self.service.get_table(destination)
+            except google.api_core.exceptions.NotFound:
+                time.sleep(0.3)
+                destination = self.service.get_table(destination)
             self.destination = destination
             self.results_per_page = results_per_page
             self.num_pages = math.ceil(float(destination.num_rows / results_per_page))
