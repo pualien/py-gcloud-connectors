@@ -1,3 +1,4 @@
+import socket
 import tempfile
 from operator import itemgetter
 
@@ -32,6 +33,7 @@ class GStorageConnector:
             self.service = storage.Client()
         self.logger = logger if logger is not None else EmptyLogger()
 
+    @retry((socket.timeout), tries=3, delay=2)
     def pd_to_gstorage(self, df, bucket_name, file_name_path, tempfile_mode=True):
         """
         :param df: pandas DataFrame to be saved on GCS
