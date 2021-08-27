@@ -1,6 +1,8 @@
+import math
+
+from google.cloud import bigquery
 from google.cloud.bigquery_storage_v1beta1 import BigQueryStorageClient
 from google.oauth2 import service_account
-from google.cloud import bigquery
 
 
 class BigQueryConnector:
@@ -25,6 +27,11 @@ class BigQueryConnector:
         else:
             self.creds = None
         self.service = bigquery.Client(project=self.project_id, credentials=self.creds)
+        self.destination = None
+        self.results_per_page = None
+        self.num_pages = None
+        self.index = None
+        self.next_token = None
 
     @staticmethod
     def pd_cast_dtypes(df, table_dtypes):
@@ -117,3 +124,48 @@ class BigQueryConnector:
                     .result()
                     .to_dataframe()
             )
+
+    def clear_chunked_variables(self):
+        self.destination = None
+        self.results_per_page = None
+        self.num_pages = None
+        self.index = None
+        self.next_token = None
+
+    def has_next(self):
+        if self.index != self.num_pages:
+            return True
+        else:
+            self.clear_chunked_variables()
+            return False
+
+    def pd_execute_chunked(self, query, progress_bar_type=None, bqstorage_enabled=False, first_run=True,
+                           results_per_page=10):
+
+        if first_run:
+            destination = self.service.query(query).destination
+            destination = self.service.get_table(destination)
+            self.destination = destination
+            self.results_per_page = results_per_page
+            self.num_pages = math.ceil(float(destination.num_rows / results_per_page))
+            self.index = 0
+            self.next_token = None
+
+        if self.next_token:
+            rows = self.service.list_rows(self.destination,
+                                          max_results=self.results_per_page,
+                                          page_token=self.next_token)
+        else:
+            rows = self.service.list_rows(self.destination,
+                                          max_results=self.results_per_page)
+
+        if self.index < self.num_pages:
+
+            df = rows.to_dataframe()
+            self.index += 1
+            self.next_token = rows.next_page_token
+
+            return df
+
+        else:
+            return None
