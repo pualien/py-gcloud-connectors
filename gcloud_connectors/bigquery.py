@@ -145,8 +145,9 @@ class BigQueryConnector:
     def pd_execute_chunked(self, query, progress_bar_type=None, bqstorage_enabled=False, first_run=True,
                            results_per_page=10, sleep_time=None):
 
+        job_config = bigquery.QueryJobConfig(use_query_cache=True, priority=bigquery.QueryPriority.INTERACTIVE)
         if first_run:
-            query_job = self.service.query(query)
+            query_job = self.service.query(query, job_config=job_config)
             destination = query_job.destination
             try:
                 destination = self.service.get_table(destination)
