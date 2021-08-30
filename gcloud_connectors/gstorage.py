@@ -1,14 +1,16 @@
+import json
+import os
 import socket
 import tempfile
 from operator import itemgetter
 
 import google
+import requests
+import urllib3
+from google.cloud import storage
 from retry import retry
 
 from gcloud_connectors.logger import EmptyLogger
-from google.cloud import storage
-import os
-import json
 
 
 class GStorageConnector:
@@ -33,7 +35,7 @@ class GStorageConnector:
             self.service = storage.Client()
         self.logger = logger if logger is not None else EmptyLogger()
 
-    @retry((socket.timeout), tries=3, delay=2)
+    @retry((socket.timeout, requests.exceptions.ConnectionError, urllib3.exceptions.ProtocolError), tries=3, delay=2)
     def pd_to_gstorage(self, df, bucket_name, file_name_path, tempfile_mode=True):
         """
         :param df: pandas DataFrame to be saved on GCS

@@ -143,7 +143,7 @@ class BigQueryConnector:
 
     @retry(google.api_core.exceptions.NotFound, tries=3, delay=2)
     def pd_execute_chunked(self, query, progress_bar_type=None, bqstorage_enabled=False, first_run=True,
-                           results_per_page=10):
+                           results_per_page=10, sleep_time=None):
 
         if first_run:
             query_job = self.service.query(query)
@@ -151,7 +151,8 @@ class BigQueryConnector:
             try:
                 destination = self.service.get_table(destination)
             except google.api_core.exceptions.NotFound:
-                time.sleep(0.3)
+                if sleep_time:
+                    time.sleep(sleep_time)
                 destination = self.service.get_table(destination)
             self.destination = destination
             self.results_per_page = results_per_page
