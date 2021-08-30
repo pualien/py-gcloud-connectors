@@ -149,15 +149,14 @@ class BigQueryConnector:
 
         # view_id = "{project}.{dataset_view}".format(project=self.project_id, dataset_view=dataset_view)
         # view = bigquery.Table(view_id)
-        job_config = bigquery.QueryJobConfig(use_query_cache=True, priority=bigquery.QueryPriority.INTERACTIVE)
+        # job_config = bigquery.QueryJobConfig(use_query_cache=True, priority=bigquery.QueryPriority.INTERACTIVE)
         if first_run:
             # view.view_query = query
             # self.service.delete_table(view_id, not_found_ok=True)
             # self.view = self.service.create_table(view)
             # query_job = self.service.query('''select * from {view_reference}'''.format(view_reference=view_id),
             #                                job_config=job_config)
-            query_job = self.service.query(query,
-                                           job_config=job_config)
+            query_job = self.service.query(query)
             query_job.results()
 
             # num_rows = [x for x in self.service.query('''select count(*) as num_rows from {view_reference}'''.format(view_reference=view_id)).result()][0]['num_rows']
