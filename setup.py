@@ -50,7 +50,7 @@ def get_requirements(*requirements_file):
 
 
 setup(name='gcloud-connectors',
-      version='0.1.58b10',
+      version='0.1.58',
       url='https://github.com/pualien/py-gcloud-connector',
       # download_url='https://github.com/pualien/py-gcloud-connectors/archive/0.1.23.tar.gz',
       license='MIT',
@@ -58,7 +58,7 @@ setup(name='gcloud-connectors',
       author_email='pualien@gmail.com',
       description='Python utilities to simplify connection with Google APIs',
       packages=find_packages(exclude=['tests']),
-      install_requires=get_requirements('default.txt'),
+      install_requires=get_requirements('default.txt') + get_requirements('constraint.txt'),
       long_description=open('README.md').read(),
       long_description_content_type='text/markdown',
       python_requires='~=3.6',
