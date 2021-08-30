@@ -156,25 +156,27 @@ class BigQueryConnector:
             self.view = self.service.create_table(view)
             query_job = self.service.query('''select * from {view_reference}'''.format(view_reference=view.reference),
                                            job_config=job_config)
-            destination = query_job.destination
-            try:
-                destination = self.service.get_table(destination)
-            except exceptions.NotFound:
-                if sleep_time:
-                    time.sleep(sleep_time)
-                destination = self.service.get_table(destination)
-            self.destination = destination
+
+            num_rows = self.service.query('''select count(*) as num_rows from {view_reference}'''.format(view_reference=view.reference)).result()[0]['num_rows']
+            # destination = query_job.destination
+            # try:
+            #     destination = self.service.get_table(destination)
+            # except exceptions.NotFound:
+            #     if sleep_time:
+            #         time.sleep(sleep_time)
+            #     destination = self.service.get_table(destination)
+            # self.destination = destination
             self.results_per_page = results_per_page
-            self.num_pages = math.ceil(float(destination.num_rows / results_per_page))
+            self.num_pages = math.ceil(float(num_rows / results_per_page))
             self.index = 0
             self.next_token = None
 
         if self.next_token:
-            rows = self.service.list_rows(self.destination,
+            rows = self.service.list_rows(view_id,
                                           max_results=self.results_per_page,
                                           page_token=self.next_token)
         else:
-            rows = self.service.list_rows(self.destination,
+            rows = self.service.list_rows(view_id,
                                           max_results=self.results_per_page)
 
         if self.index < self.num_pages:
