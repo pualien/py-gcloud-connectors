@@ -147,36 +147,39 @@ class BigQueryConnector:
     def pd_execute_chunked(self, query, progress_bar_type=None, bqstorage_enabled=False, first_run=True,
                            results_per_page=10, sleep_time=None, dataset_view=''):
 
-        view_id = "{project}.{dataset_view}".format(project=self.project_id, dataset_view=dataset_view)
-        view = bigquery.Table(view_id)
+        # view_id = "{project}.{dataset_view}".format(project=self.project_id, dataset_view=dataset_view)
+        # view = bigquery.Table(view_id)
         job_config = bigquery.QueryJobConfig(use_query_cache=True, priority=bigquery.QueryPriority.INTERACTIVE)
         if first_run:
-            view.view_query = query
-            self.service.delete_table(view_id, not_found_ok=True)
-            self.view = self.service.create_table(view)
-            query_job = self.service.query('''select * from {view_reference}'''.format(view_reference=view_id),
+            # view.view_query = query
+            # self.service.delete_table(view_id, not_found_ok=True)
+            # self.view = self.service.create_table(view)
+            # query_job = self.service.query('''select * from {view_reference}'''.format(view_reference=view_id),
+            #                                job_config=job_config)
+            query_job = self.service.query(query,
                                            job_config=job_config)
+            query_job.results()
 
-            num_rows = [x for x in self.service.query('''select count(*) as num_rows from {view_reference}'''.format(view_reference=view_id)).result()][0]['num_rows']
-            # destination = query_job.destination
-            # try:
-            #     destination = self.service.get_table(destination)
-            # except exceptions.NotFound:
-            #     if sleep_time:
-            #         time.sleep(sleep_time)
-            #     destination = self.service.get_table(destination)
-            # self.destination = destination
+            # num_rows = [x for x in self.service.query('''select count(*) as num_rows from {view_reference}'''.format(view_reference=view_id)).result()][0]['num_rows']
+            destination = query_job.destination
+            try:
+                destination = self.service.get_table(destination)
+            except exceptions.NotFound:
+                if sleep_time:
+                    time.sleep(sleep_time)
+                destination = self.service.get_table(destination)
+            self.destination = destination
             self.results_per_page = results_per_page
-            self.num_pages = math.ceil(float(num_rows / results_per_page))
+            self.num_pages = math.ceil(float(destination.num_rows / results_per_page))
             self.index = 0
             self.next_token = None
 
         if self.next_token:
-            rows = self.service.list_rows(view_id,
+            rows = self.service.list_rows(self.destination,
                                           max_results=self.results_per_page,
                                           page_token=self.next_token)
         else:
-            rows = self.service.list_rows(view_id,
+            rows = self.service.list_rows(self.destination,
                                           max_results=self.results_per_page)
 
         if self.index < self.num_pages:
