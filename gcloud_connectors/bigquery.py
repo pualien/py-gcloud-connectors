@@ -6,6 +6,8 @@ from google.cloud.bigquery_storage_v1beta1 import BigQueryStorageClient
 from google.oauth2 import service_account
 from google.api_core import exceptions
 
+from gcloud_connectors.logger import EmptyLogger
+
 
 class BigQueryConnector:
     def __init__(self, project_id, confs_path=None, auth_type='service_account', json_keyfile_dict=None, logger=None):
@@ -13,6 +15,7 @@ class BigQueryConnector:
         self.json_keyfile_dict = json_keyfile_dict
         self.auth_type = auth_type
         self.project_id = project_id
+        self.logger = logger if logger is not None else EmptyLogger()
         # authorization boilerplate code
         # os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r'{}/{}'.format(os.getcwd(), confs_path)
 
@@ -157,9 +160,11 @@ class BigQueryConnector:
             # query_job = self.service.query('''select * from {view_reference}'''.format(view_reference=view_id),
             #                                job_config=job_config)
             query_job = self.service.query(query)
-            query_job.results()
 
             # num_rows = [x for x in self.service.query('''select count(*) as num_rows from {view_reference}'''.format(view_reference=view_id)).result()][0]['num_rows']
+            while query_job.done() is not True:
+                self.logger.info("waiting for job completion")
+
             destination = query_job.destination
             try:
                 destination = self.service.get_table(destination)
