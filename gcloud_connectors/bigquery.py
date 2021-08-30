@@ -34,6 +34,7 @@ class BigQueryConnector:
         self.num_pages = None
         self.index = None
         self.next_token = None
+        self.view = None
 
     @staticmethod
     def pd_cast_dtypes(df, table_dtypes):
@@ -133,6 +134,7 @@ class BigQueryConnector:
         self.num_pages = None
         self.index = None
         self.next_token = None
+        self.view = None
 
     def has_next(self):
         if self.index != self.num_pages:
@@ -143,11 +145,17 @@ class BigQueryConnector:
 
     @retry(exceptions.NotFound, tries=3, delay=2)
     def pd_execute_chunked(self, query, progress_bar_type=None, bqstorage_enabled=False, first_run=True,
-                           results_per_page=10, sleep_time=None):
+                           results_per_page=10, sleep_time=None, dataset_view=''):
 
+        view_id = "{project}.{dataset_view}".format(project=self.project_id, dataset_view=dataset_view)
+        view = bigquery.Table(view_id)
         job_config = bigquery.QueryJobConfig(use_query_cache=True, priority=bigquery.QueryPriority.INTERACTIVE)
         if first_run:
-            query_job = self.service.query(query, job_config=job_config)
+            view.view_query = query
+            self.service.delete_table(view_id, not_found_ok=True)
+            self.view = self.service.create_table(view)
+            query_job = self.service.query('''select * from {view_reference}'''.format(view_reference=view.reference),
+                                           job_config=job_config)
             destination = query_job.destination
             try:
                 destination = self.service.get_table(destination)
