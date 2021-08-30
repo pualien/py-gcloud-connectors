@@ -1,10 +1,10 @@
-import google
 import math
 import time
 from retry import retry
 from google.cloud import bigquery
 from google.cloud.bigquery_storage_v1beta1 import BigQueryStorageClient
 from google.oauth2 import service_account
+from google.api_core import exceptions
 
 
 class BigQueryConnector:
@@ -141,7 +141,7 @@ class BigQueryConnector:
             self.clear_chunked_variables()
             return False
 
-    @retry(google.api_core.exceptions.NotFound, tries=3, delay=2)
+    @retry(exceptions.NotFound, tries=3, delay=2)
     def pd_execute_chunked(self, query, progress_bar_type=None, bqstorage_enabled=False, first_run=True,
                            results_per_page=10, sleep_time=None):
 
@@ -150,7 +150,7 @@ class BigQueryConnector:
             destination = query_job.destination
             try:
                 destination = self.service.get_table(destination)
-            except google.api_core.exceptions.NotFound:
+            except exceptions.NotFound:
                 if sleep_time:
                     time.sleep(sleep_time)
                 destination = self.service.get_table(destination)
