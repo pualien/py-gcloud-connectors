@@ -154,10 +154,10 @@ class BigQueryConnector:
             view.view_query = query
             self.service.delete_table(view_id, not_found_ok=True)
             self.view = self.service.create_table(view)
-            query_job = self.service.query('''select * from {view_reference}'''.format(view_reference=view.reference),
+            query_job = self.service.query('''select * from {view_reference}'''.format(view_reference=view_id),
                                            job_config=job_config)
 
-            num_rows = self.service.query('''select count(*) as num_rows from {view_reference}'''.format(view_reference=view.reference)).result()[0]['num_rows']
+            num_rows = [x for x in self.service.query('''select count(*) as num_rows from {view_reference}'''.format(view_reference=view_id)).result()][0]['num_rows']
             # destination = query_job.destination
             # try:
             #     destination = self.service.get_table(destination)
