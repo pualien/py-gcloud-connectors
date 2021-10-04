@@ -1,3 +1,4 @@
+cachetools==4.2.2
 gspread_pandas==2.2.3
 httplib2==0.19.1
 oauth2client==4.1.3
