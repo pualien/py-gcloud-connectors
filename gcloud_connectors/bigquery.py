@@ -2,7 +2,6 @@ import math
 import time
 from retry import retry
 from google.cloud import bigquery
-from google.cloud.bigquery_storage_v1beta1 import BigQueryStorageClient
 from google.oauth2 import service_account
 from google.api_core import exceptions
 
@@ -117,11 +116,10 @@ class BigQueryConnector:
         """
         del progress_bar_type
         if bqstorage_enabled is True:
-            bqstorage_client = BigQueryStorageClient(credentials=self.creds)
             return (
                 self.service.query(query)
                     .result()
-                    .to_dataframe(bqstorage_client=bqstorage_client)
+                    .to_dataframe(create_bqstorage_client=True)
             )
         else:
             return (
