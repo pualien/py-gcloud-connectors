@@ -12,7 +12,7 @@ google_api_python_client==2.18.0
 importlib_metadata==4.8.1
 keyring==23.1.0
 lockfile==0.12.2
-lxml==4.6.3
+lxml==4.6.5
 mock==4.0.3
 ordereddict==1.1
 protobuf==3.17.3
@@ -22,3 +22,4 @@ toml==0.10.2
 unicodedata2==13.0.0.post2
 usercustomize==1.0.0
 zipp==3.6.0
+google-analytics-data==0.11.1

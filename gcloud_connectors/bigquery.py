@@ -4,6 +4,7 @@ from retry import retry
 from google.cloud import bigquery
 from google.oauth2 import service_account
 from google.api_core import exceptions
+import google.auth
 
 from gcloud_connectors.logger import EmptyLogger
 
@@ -29,7 +30,12 @@ class BigQueryConnector:
                 )
 
         else:
-            self.creds = None
+            self.creds, project = google.auth.default(
+                scopes=[
+                    "https://www.googleapis.com/auth/drive",
+                    "https://www.googleapis.com/auth/bigquery",
+                ]
+            )
         self.service = bigquery.Client(project=self.project_id, credentials=self.creds)
         self.destination = None
         self.results_per_page = None
