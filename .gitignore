@@ -6,3 +6,6 @@ dist
 build
 .confs
 py_gcloud_connectors.egg-info
+/confs/google_cloud_storage_service_account.json
+/__init__.py
+/.python-version

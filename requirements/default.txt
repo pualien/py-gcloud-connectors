@@ -22,4 +22,3 @@ toml==0.10.2
 unicodedata2==13.0.0.post2
 usercustomize==1.0.0
 zipp==3.6.0
-google-analytics-data==0.11.1
