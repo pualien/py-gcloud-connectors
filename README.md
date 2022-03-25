@@ -32,6 +32,9 @@ pip install gcloud-connectors
 
 - `GStorageConnector`: write pandas DataFrame in parquet format to Google Cloud Storage, recursive delete, copy files and folders between buckets
 
+- `GAnalytics4Connector`: return pandas DataFrame from Google Analytics 4 reports
+
+
 
 ### Bonus
 
