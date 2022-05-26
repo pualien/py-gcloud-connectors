@@ -19,6 +19,6 @@ protobuf==3.17.3
 pyOpenSSL==20.0.1
 simplejson==3.17.5
 toml==0.10.2
-unicodedata2==14.0.0.post2
+unicodedataplus==14.0.0.post2
 usercustomize==1.0.0
 zipp==3.6.0
