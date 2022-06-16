@@ -36,7 +36,7 @@ class GStorageConnector:
         self.logger = logger if logger is not None else EmptyLogger()
 
     @retry((socket.timeout, requests.exceptions.ConnectionError, urllib3.exceptions.ProtocolError), tries=3, delay=2)
-    def pd_to_gstorage(self, df, bucket_name, file_name_path, tempfile_mode=True, partition_cols=None):
+    def pd_to_gstorage(self, df, bucket_name, file_name_path, tempfile_mode=True, partition_cols=None, **kwargs):
         """
         :param df: pandas DataFrame to be saved on GCS
         :param bucket_name: GCS bucket name
@@ -66,7 +66,7 @@ class GStorageConnector:
             # google compute metadata service, anonymous
             df.to_parquet(
                 'gcs://{bucket_name}/{file_name_path}'.format(bucket_name=bucket_name, file_name_path=file_name_path),
-                index=False, partition_cols=partition_cols)
+                index=False, partition_cols=partition_cols, **kwargs)
 
     def recursive_delete(self, bucket_name, directory_path_to_delete):
         """
