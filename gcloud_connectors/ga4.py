@@ -78,7 +78,10 @@ class GAnalytics4Connector:
                     {"value": filter_object["value"], "match_type": filter_object["match_type"]}
                 )
             else:
-                filter_applied = filter_type({"value": filter_object["value"]})
+                if filter_object["type"] == 'in_list_filter':
+                    filter_applied = filter_type({"values": filter_object["values"]})
+                else:
+                    filter_applied = filter_type({"value": filter_object["value"]})
 
             # TODO: wait to be fixed combining not_expressions inside FilterExpressionList. In march 2022 leads to
             #  TypeError: Parameter to MergeFrom() must be instance of same class: expected FilterExpression
