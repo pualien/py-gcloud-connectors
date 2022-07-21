@@ -9,7 +9,7 @@ from retry import retry
 
 from gcloud_connectors.logger import EmptyLogger
 
-SCOPES = ['https://www.googleapis.com/auth/analytics.readonly']
+SCOPES = ['https://www.googleapis.com/auth/analytics']
 
 
 class GAError(Exception):

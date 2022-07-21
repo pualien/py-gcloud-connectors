@@ -9,7 +9,8 @@ from oauth2client.service_account import ServiceAccountCredentials
 from retry import retry
 
 SCOPES = ['https://spreadsheets.google.com/feeds',
-          'https://www.googleapis.com/auth/drive']
+          'https://www.googleapis.com/auth/drive',
+          'https://www.googleapis.com/auth/spreadsheets']
 
 
 class GSheetsConnector:
