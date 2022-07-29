@@ -112,7 +112,7 @@ class GSheetsConnector:
             return self.pull_sheet_data(spreadsheet_key)
 
 
-    def pull_sheet_data(self, spreadsheet_key, cell_range):
+    def pull_sheet_data(self, spreadsheet_key, cell_range=None):
         sheet = self.service.spreadsheets()
         result = sheet.values().get(
             spreadsheetId=spreadsheet_key,
