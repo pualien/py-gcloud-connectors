@@ -106,10 +106,11 @@ class GSheetsConnector:
         :param worksheet_name: name as visibile in worksheet
         :return: pandas DataFrame from worksheet
         """
-        try:
-            return g2d.download(gfile=spreadsheet_key, wks_name=worksheet_name, col_names=True, credentials=self.creds)
-        except JSONDecodeError as e:
-            return self.pull_sheet_data(spreadsheet_key, cell_range=worksheet_name)
+        return self.pull_sheet_data(spreadsheet_key, cell_range=worksheet_name)
+        # try:
+        #     return g2d.download(gfile=spreadsheet_key, wks_name=worksheet_name, col_names=True, credentials=self.creds)
+        # except JSONDecodeError as e:
+        #     return self.pull_sheet_data(spreadsheet_key, cell_range=worksheet_name)
 
 
     def pull_sheet_data(self, spreadsheet_key, cell_range=None):
