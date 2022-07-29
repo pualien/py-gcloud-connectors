@@ -1,3 +1,5 @@
+from json import JSONDecodeError
+
 import gspread
 import google.auth
 import requests
@@ -104,5 +106,25 @@ class GSheetsConnector:
         :param worksheet_name: name as visibile in worksheet
         :return: pandas DataFrame from worksheet
         """
+        try:
+            return g2d.download(gfile=spreadsheet_key, wks_name=worksheet_name, col_names=True, credentials=self.creds)
+        except JSONDecodeError as e:
+            return self.pull_sheet_data(spreadsheet_key)
 
-        return g2d.download(gfile=spreadsheet_key, wks_name=worksheet_name, col_names=True, credentials=self.creds)
+
+    def pull_sheet_data(self, spreadsheet_key, cell_range):
+        sheet = self.service.spreadsheets()
+        result = sheet.values().get(
+            spreadsheetId=spreadsheet_key,
+            range=cell_range).execute()
+        values = result.get('values', [])
+
+        if not values:
+            print('No data found.')
+        else:
+            rows = sheet.values().get(spreadsheetId=spreadsheet_key,
+                                      range=cell_range).execute()
+            data = rows.get('values')
+            print("COMPLETE: Data copied")
+            import pandas as pd
+            return pd.DataFrame(data[1:], columns=data[0])
