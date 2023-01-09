@@ -124,7 +124,7 @@ class GAnalytics4Connector:
 
     def pd_get_report(self, property_id, start_date, end_date, metrics, dimensions, dimension_filters=None,
                       metrics_filters=None, offset=0, limit=100000,
-                      keep_empty_rows=False, return_property_quota=False, downloaded_totals=0, cast_date_column=None):
+                      keep_empty_rows=False, return_property_quota=False, downloaded_totals=0, cast_date_column=None, or_dimension_filters=None):
         """Runs a complex report on a Google Analytics 4 property."""
         dimensions_dict_values = [Dimension({"name": x}) for x in dimensions]
         metrics_dict_values = [Metric({"name": x}) for x in metrics]
@@ -134,9 +134,13 @@ class GAnalytics4Connector:
             dimension_filters = []
         if metrics_filters is None:
             metrics_filters = []
+        if or_dimension_filters is None:
+            or_dimension_filters = []
 
         dimension_filter_dict_values = self.get_filters(dimension_filters)
         metric_filter_dict_values = self.get_filters(metrics_filters)
+        or_dimension_filters_values = self.get_filters(or_dimension_filters)
+
 
         report_params = self.get_base_report_params(property_id=property_id, metrics_dict_values=metrics_dict_values,
                                                     dimensions_dict_values=dimensions_dict_values,
@@ -144,14 +148,31 @@ class GAnalytics4Connector:
                                                     keep_empty_rows=keep_empty_rows,
                                                     return_property_quota=return_property_quota)
         if len(dimension_filter_dict_values):
-            report_params["dimension_filter"] = FilterExpression({
-                "and_group": FilterExpressionList(
-                    {
-                        "expressions": dimension_filter_dict_values
+            if len(or_dimension_filters_values):
+                report_params["dimension_filter"] = FilterExpression({
+                    "and_group": FilterExpressionList(
+                        {
+                            "expressions": dimension_filter_dict_values
 
-                    }
-                )
-            })
+                        }
+                    ),
+                    "or_group":
+                        FilterExpressionList(
+                            {
+                                "expressions": or_dimension_filters_values
+
+                            }
+                        )
+                })
+            else:
+                report_params["dimension_filter"] = FilterExpression({
+                    "and_group": FilterExpressionList(
+                        {
+                            "expressions": dimension_filter_dict_values
+
+                        }
+                    )
+                })
         if len(metric_filter_dict_values):
             report_params["metric_filter"] = FilterExpression({
                 "and_group": FilterExpressionList(

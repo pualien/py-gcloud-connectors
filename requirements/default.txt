@@ -15,7 +15,7 @@ lockfile==0.12.2
 lxml==4.9.1
 mock==4.0.3
 ordereddict==1.1
-protobuf==3.20.1
+protobuf==3.20.2
 pyOpenSSL==20.0.1
 simplejson==3.17.5
 toml==0.10.2
