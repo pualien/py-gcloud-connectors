@@ -11,8 +11,7 @@
 
 `gcloud-connectors` is a simple and efficient api wrapper to interact with Google APIs and Pandas
 
-With a one line code change, it allows any Pandas user to take advandage of his
-multi-core computer, while `pandas` uses only one core.
+With a couple of code lines, it allows any Pandas user to take advantage of Google APIs.
 
 `gcloud-connectors` also offers nice progress bars (available on Notebook and terminal) to
 get a rough idea of the remaining amount of computation to be done.

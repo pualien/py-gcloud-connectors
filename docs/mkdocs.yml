@@ -1,8 +1,10 @@
-site_name: GCLOUD CONNECTORS documentation
+site_name: GCLOUD CONNECTORS Documentation
 site_description: Python utilities to simplify connection with Google APIs
 
 theme:
   name: 'material'
+  logo: images/logo.png
+
 
 repo_name: 'pualien/py-gcloud-connectors'
 repo_url: 'https://github.com/pualien/py-gcloud-connectors'
