@@ -9,6 +9,13 @@ repo_url: 'https://github.com/pualien/py-gcloud-connectors'
 edit_uri: 'edit/master/docs/docs'
 extra:
   repo_icon: 'github'
+  analytics:
+    provider: google
+    property: G-SZMZTP36WM
+  generator: false
+  social:
+    - icon: fontawesome/brands/linkedin
+      link: https://it.linkedin.com/in/matteosenardi
 
 nav:
   - Home: 'index.md'
