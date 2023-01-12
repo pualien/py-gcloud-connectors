@@ -6,7 +6,7 @@ theme:
 
 repo_name: 'pualien/py-gcloud-connectors'
 repo_url: 'https://github.com/pualien/py-gcloud-connectors'
-edit_uri: 'edit/docs/docs'
+edit_uri: 'edit/master/docs'
 extra:
   repo_icon: 'github'
 
