@@ -1,0 +1,25 @@
+site_name: GCLOUD CONNECTORS documentation
+site_description: Python utilities to simplify connection with Google APIs
+
+theme:
+  name: 'material'
+
+repo_name: 'pualien/py-gcloud-connectors'
+repo_url: 'https://github.com/pualien/py-gcloud-connectors'
+edit_uri: 'edit/docs/docs'
+extra:
+  repo_icon: 'github'
+
+nav:
+  - Home: 'index.md'
+  - User guide: 'user_guide.md'
+  - Troubleshooting: 'troubleshooting.md'
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - admonition
+  - pymdownx.details
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
