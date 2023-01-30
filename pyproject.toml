@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "gcloud-connectors"
+description = "Python utilities to simplify connection with Google APIs"
+license = "MIT"
+authors = [ "Matteo Senardi <pualien@gmail.com>" ]
+readme = "README.md"
+build = "setup.py"
+
+[tool.poetry.dependencies]
+python = "3.7"
+pybind11 = "^2.2"
+
+[build-system]
+requires = ["setuptools>=40.8.0", "wheel"]
+build-backend = "setuptools.build_meta:__legacy__"
