@@ -3,7 +3,7 @@ gspread_pandas==3.2.2
 httplib2==0.19.1
 oauth2client==4.1.3
 gspread==5.4.0
-numpy==1.24.1
+numpy==1.24.2
 pandas==1.3.3
 brotli==1.0.9
 Cython==0.29.24
