@@ -15,7 +15,7 @@ lxml==4.9.2
 mock==5.0.2
 ordereddict==1.1
 protobuf==4.23.3
-pyOpenSSL==23.2.0
+pyOpenSSL==23.3.0
 simplejson==3.19.1
 toml==0.10.2
 unicodedataplus==15.0.0.post2
