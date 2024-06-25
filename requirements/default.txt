@@ -2,8 +2,8 @@ cachetools==5.3.3
 gspread_pandas==3.2.2
 httplib2==0.22.0
 gspread==5.4.0
-numpy==1.24.3
-pandas==1.5.3
+numpy==1.26.4
+pandas==2.1.4
 brotli==1.0.9
 Cython==0.29.35
 docutils>=0.16
