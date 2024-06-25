@@ -11,7 +11,7 @@ google_api_python_client==2.90.0
 importlib_metadata==6.7.0
 keyring==24.2.0
 lockfile==0.12.2
-lxml==4.9.2
+lxml==5.2.2
 mock==5.0.2
 ordereddict==1.1
 protobuf==4.25.3
