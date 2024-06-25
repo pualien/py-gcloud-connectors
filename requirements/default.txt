@@ -1,4 +1,4 @@
-cachetools==4.2.2
+cachetools==5.3.3
 gspread_pandas==3.2.2
 httplib2==0.22.0
 gspread==5.4.0
@@ -6,7 +6,7 @@ numpy==1.24.3
 pandas==1.5.3
 brotli==1.0.9
 Cython==0.29.35
-docutils>=0.15.2
+docutils>=0.16
 google_api_python_client==2.90.0
 importlib_metadata==6.7.0
 keyring==24.2.0
@@ -14,10 +14,10 @@ lockfile==0.12.2
 lxml==4.9.2
 mock==5.0.2
 ordereddict==1.1
-protobuf==4.23.3
-pyOpenSSL==23.3.0
+protobuf==4.25.3
+pyOpenSSL==24.1.0
 simplejson==3.19.1
 toml==0.10.2
 unicodedataplus==15.0.0.post2
 usercustomize==1.0.0
-zipp==3.15.0
+zipp==3.19.2

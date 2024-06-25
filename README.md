@@ -4,6 +4,7 @@
 [![PyPI Latest Release](https://img.shields.io/pypi/v/gcloud-connectors.svg)](https://pypi.org/project/gcloud-connectors/)
 [![PyPI Build](https://github.com/pualien/py-gcloud-connectors/workflows/PyPI%20Build/badge.svg)](https://github.com/pualien/py-gcloud-connectors/actions)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/gcloud-connectors)](https://pypi.org/project/gcloud-connectors/)
+[![Cumulative Downloads](https://static.pepy.tech/badge/gcloud-connectors)](https://pypi.org/project/gcloud-connectors/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/gcloud-connectors.svg)](https://pypi.org/project/gcloud-connectors/)
 
 Python utilities to simplify connection with Google APIs
