@@ -3,7 +3,7 @@ gspread_pandas==3.2.2
 httplib2==0.22.0
 gspread==5.4.0
 numpy==1.26.4
-pandas==2.1.4
+pandas==2.2.2
 brotli==1.0.9
 Cython==0.29.35
 docutils>=0.16
@@ -18,6 +18,6 @@ protobuf==4.25.3
 pyOpenSSL==24.1.0
 simplejson==3.19.1
 toml==0.10.2
-unicodedataplus==15.0.0.post2
+# unicodedataplus==15.0.0.post2
 usercustomize==1.0.0
 zipp==3.19.2
