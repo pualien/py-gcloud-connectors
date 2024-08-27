@@ -158,10 +158,16 @@ class BigQueryConnector:
             while query_job.done() is not True:
                 self.logger.info("waiting for job completion")
 
+            try:
+                query_job.result()  # Waits for table load to complete.
+
+            except:
+                print(query_job.exception())
+
             destination = query_job.destination
             try:
                 destination = self.service.get_table(destination)
-            except exceptions.NotFound:
+            except (exceptions.NotFound, AttributeError):
                 if sleep_time:
                     time.sleep(sleep_time)
                 destination = self.service.get_table(destination)
