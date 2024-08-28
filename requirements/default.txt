@@ -3,9 +3,9 @@ gspread_pandas==3.2.2
 httplib2==0.22.0
 gspread==5.4.0
 numpy==1.26.4
-pandas==2.2.2
-brotli==1.0.9
-Cython==0.29.35
+pandas==2.1.4
+brotli==1.1.0
+Cython==3.0.11
 docutils>=0.16
 google_api_python_client==2.90.0
 importlib_metadata==6.7.0
