@@ -36,20 +36,28 @@ class GStorageConnector:
         self.logger = logger if logger is not None else EmptyLogger()
 
     @retry((socket.timeout, requests.exceptions.ConnectionError, urllib3.exceptions.ProtocolError), tries=3, delay=2)
-    def pd_to_gstorage(self, df, bucket_name, file_name_path, tempfile_mode=True, partition_cols=None, **kwargs):
+    def pd_to_gstorage(self, df, bucket_name, file_name_path, tempfile_mode=True, partition_cols=None,
+                       engine='pyarrow', **kwargs):
         """
-        :param df: pandas DataFrame to be saved on GCS
-        :param bucket_name: GCS bucket name
-        :param file_name_path: path to save file on bucket
-        :param tempfile_mode: if using a tempfile before pushing to GCS
-        :param partition_cols: columns for partitioning in order of partitions
-        :return: True or error whether file is correctly saved or not
+        Saves a pandas DataFrame to Google Cloud Storage (GCS).
+
+        :param df: The pandas DataFrame to be saved.
+        :param bucket_name: The name of the GCS bucket where the file will be saved.
+        :param file_name_path: The path to save the file on the bucket.
+        :param tempfile_mode: If True, saves the DataFrame to a temporary file before uploading it to GCS.
+                              Defaults to True.
+        :param partition_cols: A list of column names to use for partitioning the DataFrame.
+                              If None, no partitioning will be performed.
+        :param engine: The engine to use for saving the DataFrame to parquet format.
+                       Defaults to 'pyarrow'.
+        :param **kwargs: Additional keyword arguments to pass to the `to_parquet` method.
+        :return: True if the file is saved successfully, or an error if the operation fails.
         """
         if partition_cols is None:
             if tempfile_mode:
                 bucket = self.service.get_bucket(bucket_name)
                 with tempfile.NamedTemporaryFile('w') as temp:
-                    df.to_parquet(temp.name + '.parquet', index=False, **kwargs)
+                    df.to_parquet(temp.name + '.parquet', index=False, engine=engine, **kwargs)
                     bucket.blob(file_name_path).upload_from_filename(temp.name + '.parquet',
                                                                      content_type='application/octet-stream')
                     temp.flush()
@@ -60,13 +68,15 @@ class GStorageConnector:
                 # google compute metadata service, anonymous
                 df.to_parquet(
                     'gcs://{bucket_name}/{file_name_path}'.format(bucket_name=bucket_name, file_name_path=file_name_path),
-                    index=False, **kwargs)
+                    index=False, engine=engine, **kwargs)
+                return True
         else:
             # only works for the following order: gcloud CLI default, gcsfs cached token,
             # google compute metadata service, anonymous
             df.to_parquet(
                 'gcs://{bucket_name}/{file_name_path}'.format(bucket_name=bucket_name, file_name_path=file_name_path),
-                index=False, partition_cols=partition_cols, **kwargs)
+                index=False, partition_cols=partition_cols, engine=engine, **kwargs)
+            return True
 
     def recursive_delete(self, bucket_name, directory_path_to_delete):
         """
