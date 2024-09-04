@@ -49,7 +49,7 @@ class GStorageConnector:
             if tempfile_mode:
                 bucket = self.service.get_bucket(bucket_name)
                 with tempfile.NamedTemporaryFile('w') as temp:
-                    df.to_parquet(temp.name + '.parquet', index=False)
+                    df.to_parquet(temp.name + '.parquet', index=False, **kwargs)
                     bucket.blob(file_name_path).upload_from_filename(temp.name + '.parquet',
                                                                      content_type='application/octet-stream')
                     temp.flush()
@@ -60,7 +60,7 @@ class GStorageConnector:
                 # google compute metadata service, anonymous
                 df.to_parquet(
                     'gcs://{bucket_name}/{file_name_path}'.format(bucket_name=bucket_name, file_name_path=file_name_path),
-                    index=False)
+                    index=False, **kwargs)
         else:
             # only works for the following order: gcloud CLI default, gcsfs cached token,
             # google compute metadata service, anonymous
