@@ -8,7 +8,7 @@ brotli==1.1.0
 Cython==3.0.11
 docutils>=0.16
 google_api_python_client==2.90.0
-importlib_metadata==8.5.0
+importlib_metadata>=6.0.0
 keyring==25.3.0
 lockfile==0.12.2
 lxml==5.3.0
