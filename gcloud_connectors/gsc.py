@@ -1,5 +1,5 @@
+import google.auth
 from googleapiclient.discovery import build
-
 from oauth2client.service_account import ServiceAccountCredentials
 from retry import retry
 
@@ -14,12 +14,16 @@ class GSCConnector:
         self.json_keyfile_dict = json_keyfile_dict
         self.auth_type = auth_type
 
-        if self.json_keyfile_dict is None:
+        if self.json_keyfile_dict is None and self.confs_path is not None:
             self.creds = ServiceAccountCredentials.from_json_keyfile_name(
                 self.confs_path, scopes=SCOPES)
-        else:
+        elif self.json_keyfile_dict is not None and self.confs_path is None:
             self.creds = ServiceAccountCredentials.from_json_keyfile_dict(
                 self.json_keyfile_dict, scopes=SCOPES)
+        else:
+            self.creds = google.auth.default(
+                scopes=SCOPES
+            )
 
         self.service = build('searchconsole', 'v1', credentials=self.creds, cache_discovery=False)
         self.logger = logger if logger is not None else EmptyLogger()
